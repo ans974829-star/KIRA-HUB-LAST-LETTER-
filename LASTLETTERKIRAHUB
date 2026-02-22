@@ -44,13 +44,24 @@ pcall(function()
     end
 end)
 
--- Key System GUI
-local KeyGui = Instance.new("ScreenGui")
-KeyGui.Name = "KiraKeySystem_" .. math.random(100000, 999999)
-KeyGui.ResetOnSpawn = false
-KeyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-KeyGui.IgnoreGuiInset = true
-KeyGui.Parent = CoreGui or gethui()
+-- Key System GUI with safe checks
+local KeyGui
+local guiOk, guiErr = pcall(function()
+    KeyGui = Instance.new("ScreenGui")
+    KeyGui.Name = "KiraKeySystem_" .. math.random(100000, 999999)
+    KeyGui.ResetOnSpawn = false
+    KeyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    KeyGui.IgnoreGuiInset = true
+    KeyGui.Parent = CoreGui or playerGui  -- Fallback to playerGui if CoreGui fails
+end)
+if not guiOk then
+    StarterGui:SetCore("SendNotification", {
+        Title = "KIRA Key Error",
+        Text = "Failed to create Key GUI: " .. tostring(guiErr) .. ". Try different executor.",
+        Duration = 10
+    })
+    return
+end
 
 -- Background Blur
 local BlurFrame = Instance.new("Frame")
@@ -172,7 +183,7 @@ local KeyInput = Instance.new("TextBox")
 KeyInput.Size = UDim2.new(1, -20, 1, 0)
 KeyInput.Position = UDim2.new(0, 10, 0, 0)
 KeyInput.BackgroundTransparency = 1
-KeyInput.Text = SavedKey or ""
+KeyInput.Text = ""  -- Blank, no pre-fill
 KeyInput.PlaceholderText = "🔑 Enter your key here..."
 KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 KeyInput.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
@@ -249,20 +260,20 @@ YouTubeButton.Parent = KeyContent
 
 Instance.new("UICorner", YouTubeButton).CornerRadius = UDim.new(0, 10)
 
--- Credits
+-- Credits (increased size for visibility)
 local KeyCredits = Instance.new("TextLabel")
-KeyCredits.Size = UDim2.new(1, 0, 0, 40)
+KeyCredits.Size = UDim2.new(1, 0, 0, 50)  -- Increased height
 KeyCredits.Position = UDim2.new(0, 0, 0, 300)
 KeyCredits.BackgroundTransparency = 1
 KeyCredits.Text = "Made by KIRA 🔥\nSupport KIRA by subscribing & joining Discord!"
 KeyCredits.TextColor3 = Color3.fromRGB(120, 120, 120)
 KeyCredits.Font = Enum.Font.Gotham
-KeyCredits.TextSize = 11
+KeyCredits.TextSize = 13  -- Increased for visibility
 KeyCredits.Parent = KeyContent
 
 local MouseWarn = Instance.new("TextLabel")
 MouseWarn.Size = UDim2.new(1, 0, 0, 20)
-MouseWarn.Position = UDim2.new(0, 0, 0, 340)
+MouseWarn.Position = UDim2.new(0, 0, 0, 350)  -- Adjusted position due to larger credits
 MouseWarn.BackgroundTransparency = 1
 MouseWarn.Text = "⚠️ Mouse locked? Spam M or press ENTER to unlock!"
 MouseWarn.TextColor3 = Color3.fromRGB(255, 200, 100)
@@ -270,35 +281,50 @@ MouseWarn.Font = Enum.Font.GothamBold
 MouseWarn.TextSize = 10
 MouseWarn.Parent = KeyContent
 
--- Animations
+-- Animations with safe pcall
 local function AnimateKeyPanelIn()
-    KeyPanel.Position = UDim2.new(0.5, -210, 0.5, -200)
-    KeyPanel.BackgroundTransparency = 1
-    KeyStroke.Transparency = 1
-    KeyGlow.ImageTransparency = 1
-    BlurFrame.BackgroundTransparency = 1
-    
-    TweenService:Create(BlurFrame, TweenInfo.new(0.5), {BackgroundTransparency = 0.4}):Play()
-    task.wait(0.2)
-    TweenService:Create(KeyPanel, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Position = UDim2.new(0.5, -210, 0.5, -240),
-        BackgroundTransparency = 0
-    }):Play()
-    TweenService:Create(KeyStroke, TweenInfo.new(0.4), {Transparency = 0}):Play()
-    TweenService:Create(KeyGlow, TweenInfo.new(0.8), {ImageTransparency = 0.6}):Play()
+    local animOk = pcall(function()
+        KeyPanel.Position = UDim2.new(0.5, -210, 0.5, -200)
+        KeyPanel.BackgroundTransparency = 1
+        KeyStroke.Transparency = 1
+        KeyGlow.ImageTransparency = 1
+        BlurFrame.BackgroundTransparency = 1
+        
+        TweenService:Create(BlurFrame, TweenInfo.new(0.5), {BackgroundTransparency = 0.4}):Play()
+        task.wait(0.2)
+        TweenService:Create(KeyPanel, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Position = UDim2.new(0.5, -210, 0.5, -240),
+            BackgroundTransparency = 0
+        }):Play()
+        TweenService:Create(KeyStroke, TweenInfo.new(0.4), {Transparency = 0}):Play()
+        TweenService:Create(KeyGlow, TweenInfo.new(0.8), {ImageTransparency = 0.6}):Play()
+    end)
+    if not animOk then
+        -- Fallback: Show without animation
+        KeyPanel.BackgroundTransparency = 0
+        KeyStroke.Transparency = 0
+        KeyGlow.ImageTransparency = 0.6
+        BlurFrame.BackgroundTransparency = 0.4
+    end
 end
 
 local function AnimateKeyPanelOut(callback)
-    TweenService:Create(KeyPanel, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-        Position = UDim2.new(0.5, -210, 0.5, -200),
-        BackgroundTransparency = 1
-    }):Play()
-    TweenService:Create(KeyStroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
-    TweenService:Create(KeyGlow, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
-    TweenService:Create(BlurFrame, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
-    task.wait(0.5)
-    KeyGui:Destroy()
-    if callback then callback() end
+    local animOk = pcall(function()
+        TweenService:Create(KeyPanel, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+            Position = UDim2.new(0.5, -210, 0.5, -200),
+            BackgroundTransparency = 1
+        }):Play()
+        TweenService:Create(KeyStroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
+        TweenService:Create(KeyGlow, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
+        TweenService:Create(BlurFrame, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
+        task.wait(0.5)
+        KeyGui:Destroy()
+        if callback then callback() end
+    end)
+    if not animOk then
+        KeyGui:Destroy()
+        if callback then callback() end
+    end
 end
 
 local function AddHoverEffect(btn, hover, normal)
@@ -987,12 +1013,12 @@ NextButton.Parent = PaginationFrame
 Instance.new("UICorner", NextButton).CornerRadius = UDim.new(0, 5)
 
 -- ═══════════════════════════════════════════════════════════════
--- 🔧 CREDITS
+-- 🔧 CREDITS (increased visibility)
 -- ═══════════════════════════════════════════════════════════════
 
 local CreditsFrame = Instance.new("Frame")
-CreditsFrame.Size = UDim2.new(1, 0, 0, 22)
-CreditsFrame.Position = UDim2.new(0, 0, 1, -25)
+CreditsFrame.Size = UDim2.new(1, 0, 0, 30)  -- Increased height for better visibility
+CreditsFrame.Position = UDim2.new(0, 0, 1, -30)  -- Adjusted position to fit
 CreditsFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 CreditsFrame.BorderSizePixel = 0
 CreditsFrame.Parent = ContentFrame
@@ -1004,7 +1030,7 @@ CreditsLabel.BackgroundTransparency = 1
 CreditsLabel.Text = "Made by KIRA 🔥 | YT: @kira_0001 | DC: discord.gg/ZH48pK5wen"
 CreditsLabel.TextColor3 = Color3.fromRGB(100, 100, 100)
 CreditsLabel.Font = Enum.Font.Gotham
-CreditsLabel.TextSize = 9
+CreditsLabel.TextSize = 12  -- Increased for better visibility
 CreditsLabel.Parent = CreditsFrame
 
 -- ═══════════════════════════════════════════════════════════════
@@ -1279,10 +1305,10 @@ local function AutoTypeWord(word, input)
     local thinkDelay = THINKING_DELAYS[SelectedDelayIndex].delay
     
     task.spawn(function()
-        -- THINKING DELAY
+        -- THINKING DELAY with anti-ban randomization
         if thinkDelay > 0 then
             LettersSubtext.Text = "🤔 Thinking... (" .. thinkDelay .. "s)"
-            task.wait(thinkDelay)
+            task.wait(thinkDelay + math.random() * 0.2)  -- Random variance for human simulation
         end
         
         LettersSubtext.Text = "⌨️ Typing..."
@@ -1291,12 +1317,12 @@ local function AutoTypeWord(word, input)
         local size = cam.ViewportSize
         local x, y = size.X / 2, size.Y / 2
 
-        -- Click to focus
-        for _ = 1, 3 do
+        -- Click to focus with extra random clicks for anti-ban
+        for _ = 1, math.random(3, 5) do  -- Random number of clicks
             VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
-            task.wait(0.03)
+            task.wait(math.random(2, 5) / 100)  -- Randomized delay
             VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
-            task.wait(0.03)
+            task.wait(math.random(2, 5) / 100)
         end
 
         local typedChars = {}
@@ -1319,24 +1345,24 @@ local function AutoTypeWord(word, input)
                     VirtualInputManager:SendKeyEvent(false, wrongKc, false, game)
                     table.insert(typedChars, wrongChar)
                     
-                    -- Pause (realize mistake)
-                    task.wait(math.random(15, 35) / 100)
+                    -- Pause (realize mistake) with random variance
+                    task.wait(math.random(15, 35) / 100 + math.random() * 0.1)
                     
                     -- Delete the mistake
                     VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
-                    task.wait(0.05)
+                    task.wait(0.05 + math.random() * 0.02)
                     VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Backspace, false, game)
                     table.remove(typedChars)
                     
-                    -- Small pause after correction
-                    task.wait(math.random(8, 15) / 100)
+                    -- Small pause after correction with variance
+                    task.wait(math.random(8, 15) / 100 + math.random() * 0.05)
                 end
             end
             
             -- Type correct character
             if kc then
                 VirtualInputManager:SendKeyEvent(true, kc, false, game)
-                task.wait(math.random(speed.randomMin, speed.randomMax) / 100)
+                task.wait(math.random(speed.randomMin, speed.randomMax) / 100 + math.random() * 0.01)  -- Extra random for anti-ban
                 VirtualInputManager:SendKeyEvent(false, kc, false, game)
                 table.insert(typedChars, char)
             end
@@ -1344,11 +1370,11 @@ local function AutoTypeWord(word, input)
             i = i + 1
         end
 
-        -- Small pause before enter (human hesitation)
+        -- Small pause before enter (human hesitation) with random
         if speed.isHuman then
-            task.wait(math.random(10, 25) / 100)
+            task.wait(math.random(10, 25) / 100 + math.random() * 0.05)
         else
-            task.wait(0.03)
+            task.wait(0.03 + math.random() * 0.01)
         end
         
         -- Press Enter
@@ -1722,6 +1748,9 @@ StarterGui:SetCore("SendNotification", {
     Text = "Loading Last Letter v3.2...",
     Duration = 5
 })
+
+-- Force key system prompt (for testing/fixing skip issue; remove after)
+SavedKey = nil  -- Override to nil to always show key GUI
 
 if SavedKey and SavedKey == VALID_KEY then
     KeyVerified = true
