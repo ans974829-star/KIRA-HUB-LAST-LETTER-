@@ -1730,3 +1730,4 @@ if SavedKey and SavedKey == VALID_KEY then
 else
     AnimateKeyPanelIn()
 end
+
