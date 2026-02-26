@@ -1,7 +1,8 @@
--- 🔥 KIRA HUB [Last Letter] v3.2 — ABSOLUTE FINAL EDITION 🔥
+-- 🔥 KIRA HUB [Last Letter] v3.5 — FIXED EDITION 🔥
 -- Made by KIRA
+-- Discord: heaven_nor_hell_
 -- YouTube: https://youtube.com/@kira_0001
--- Discord: https://discord.gg/ZH48pK5wen
+-- Server: https://discord.gg/ZH48pK5wen
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
@@ -22,8 +23,8 @@ local playerGui = player:WaitForChild("PlayerGui")
 
 -- Clean up old GUI
 local env = getgenv() or _G
-if env and env.KiraLastLetterV32 then
-    local foundGui = CoreGui:FindFirstChild(env.KiraLastLetterV32)
+if env and env.KiraLastLetterV35 then
+    local foundGui = CoreGui:FindFirstChild(env.KiraLastLetterV35)
     if foundGui then foundGui:Destroy() end
 end
 
@@ -31,12 +32,11 @@ end
 -- 🔑 KEY SYSTEM
 -- ═══════════════════════════════════════════════════════════════
 
-local VALID_KEY = "HEYINEEDTHEKEYMAN"
+local VALID_KEY = "KIRAOPINCHAT"
 local DISCORD_LINK = "https://discord.gg/ZH48pK5wen"
 local YOUTUBE_LINK = "https://youtube.com/@kira_0001"
 local KeyVerified = false
 
--- Check saved key
 local SavedKey = nil
 pcall(function()
     if isfile and isfile("KiraLastLetterKey.txt") then
@@ -44,7 +44,6 @@ pcall(function()
     end
 end)
 
--- Key System GUI with safe checks
 local KeyGui
 local guiOk, guiErr = pcall(function()
     KeyGui = Instance.new("ScreenGui")
@@ -52,18 +51,18 @@ local guiOk, guiErr = pcall(function()
     KeyGui.ResetOnSpawn = false
     KeyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     KeyGui.IgnoreGuiInset = true
-    KeyGui.Parent = CoreGui or playerGui  -- Fallback to playerGui if CoreGui fails
+    KeyGui.Parent = CoreGui or playerGui
 end)
 if not guiOk then
     StarterGui:SetCore("SendNotification", {
         Title = "KIRA Key Error",
-        Text = "Failed to create Key GUI: " .. tostring(guiErr) .. ". Try different executor.",
+        Text = "Failed to create Key GUI.",
         Duration = 10
     })
     return
 end
 
--- Background Blur
+-- Key UI
 local BlurFrame = Instance.new("Frame")
 BlurFrame.Size = UDim2.new(1, 0, 1, 0)
 BlurFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -71,15 +70,13 @@ BlurFrame.BackgroundTransparency = 0.4
 BlurFrame.BorderSizePixel = 0
 BlurFrame.Parent = KeyGui
 
--- Key Panel
 local KeyPanel = Instance.new("Frame")
-KeyPanel.Size = UDim2.new(0, 420, 0, 480)
-KeyPanel.Position = UDim2.new(0.5, -210, 0.5, -240)
+KeyPanel.Size = UDim2.new(0, 380, 0, 420)
+KeyPanel.Position = UDim2.new(0.5, -190, 0.5, -210)
 KeyPanel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 KeyPanel.BorderSizePixel = 0
 KeyPanel.BackgroundTransparency = 1
 KeyPanel.Parent = KeyGui
-
 Instance.new("UICorner", KeyPanel).CornerRadius = UDim.new(0, 16)
 
 local KeyStroke = Instance.new("UIStroke")
@@ -88,9 +85,8 @@ KeyStroke.Thickness = 3
 KeyStroke.Transparency = 1
 KeyStroke.Parent = KeyPanel
 
--- Glow
 local KeyGlow = Instance.new("ImageLabel")
-KeyGlow.Size = UDim2.new(1, 80, 1, 80)
+KeyGlow.Size = UDim2.new(1, 60, 1, 60)
 KeyGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
 KeyGlow.AnchorPoint = Vector2.new(0.5, 0.5)
 KeyGlow.BackgroundTransparency = 1
@@ -101,13 +97,11 @@ KeyGlow.ScaleType = Enum.ScaleType.Slice
 KeyGlow.SliceCenter = Rect.new(24, 24, 276, 276)
 KeyGlow.Parent = KeyPanel
 
--- Header
 local KeyHeader = Instance.new("Frame")
-KeyHeader.Size = UDim2.new(1, 0, 0, 100)
+KeyHeader.Size = UDim2.new(1, 0, 0, 80)
 KeyHeader.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
 KeyHeader.BorderSizePixel = 0
 KeyHeader.Parent = KeyPanel
-
 Instance.new("UICorner", KeyHeader).CornerRadius = UDim.new(0, 16)
 
 local KeyHeaderFix = Instance.new("Frame")
@@ -126,52 +120,38 @@ KeyHeaderGradient.Color = ColorSequence.new{
 KeyHeaderGradient.Rotation = 45
 KeyHeaderGradient.Parent = KeyHeader
 
--- Logo
 local KeyLogo = Instance.new("TextLabel")
-KeyLogo.Size = UDim2.new(1, 0, 0, 40)
-KeyLogo.Position = UDim2.new(0, 0, 0, 15)
+KeyLogo.Size = UDim2.new(1, 0, 0, 35)
+KeyLogo.Position = UDim2.new(0, 0, 0, 12)
 KeyLogo.BackgroundTransparency = 1
 KeyLogo.Text = "🔥 KIRA HUB 🔥"
 KeyLogo.TextColor3 = Color3.fromRGB(255, 255, 255)
 KeyLogo.Font = Enum.Font.GothamBlack
-KeyLogo.TextSize = 28
+KeyLogo.TextSize = 24
 KeyLogo.Parent = KeyHeader
 
 local KeySubtitle = Instance.new("TextLabel")
-KeySubtitle.Size = UDim2.new(1, 0, 0, 25)
-KeySubtitle.Position = UDim2.new(0, 0, 0, 55)
+KeySubtitle.Size = UDim2.new(1, 0, 0, 20)
+KeySubtitle.Position = UDim2.new(0, 0, 0, 48)
 KeySubtitle.BackgroundTransparency = 1
-KeySubtitle.Text = "[ LAST LETTER ] v3.2"
+KeySubtitle.Text = "[ LAST LETTER ] v3.5"
 KeySubtitle.TextColor3 = Color3.fromRGB(255, 220, 150)
 KeySubtitle.Font = Enum.Font.GothamBold
-KeySubtitle.TextSize = 16
+KeySubtitle.TextSize = 13
 KeySubtitle.Parent = KeyHeader
 
-local KeyNote = Instance.new("TextLabel")
-KeyNote.Size = UDim2.new(1, 0, 0, 18)
-KeyNote.Position = UDim2.new(0, 0, 0, 78)
-KeyNote.BackgroundTransparency = 1
-KeyNote.Text = "🔑 Enter Key to Continue"
-KeyNote.TextColor3 = Color3.fromRGB(200, 200, 200)
-KeyNote.Font = Enum.Font.Gotham
-KeyNote.TextSize = 12
-KeyNote.Parent = KeyHeader
-
--- Content
 local KeyContent = Instance.new("Frame")
-KeyContent.Size = UDim2.new(1, -30, 1, -115)
-KeyContent.Position = UDim2.new(0, 15, 0, 105)
+KeyContent.Size = UDim2.new(1, -24, 1, -92)
+KeyContent.Position = UDim2.new(0, 12, 0, 85)
 KeyContent.BackgroundTransparency = 1
 KeyContent.Parent = KeyPanel
 
--- Key Input
 local KeyInputFrame = Instance.new("Frame")
-KeyInputFrame.Size = UDim2.new(1, 0, 0, 50)
-KeyInputFrame.Position = UDim2.new(0, 0, 0, 20)
+KeyInputFrame.Size = UDim2.new(1, 0, 0, 45)
+KeyInputFrame.Position = UDim2.new(0, 0, 0, 10)
 KeyInputFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 KeyInputFrame.BorderSizePixel = 0
 KeyInputFrame.Parent = KeyContent
-
 Instance.new("UICorner", KeyInputFrame).CornerRadius = UDim.new(0, 10)
 
 local KeyInputStroke = Instance.new("UIStroke")
@@ -180,236 +160,172 @@ KeyInputStroke.Thickness = 2
 KeyInputStroke.Parent = KeyInputFrame
 
 local KeyInput = Instance.new("TextBox")
-KeyInput.Size = UDim2.new(1, -20, 1, 0)
-KeyInput.Position = UDim2.new(0, 10, 0, 0)
+KeyInput.Size = UDim2.new(1, -16, 1, 0)
+KeyInput.Position = UDim2.new(0, 8, 0, 0)
 KeyInput.BackgroundTransparency = 1
-KeyInput.Text = ""  -- Blank, no pre-fill
-KeyInput.PlaceholderText = "🔑 Enter your key here..."
+KeyInput.Text = ""
+KeyInput.PlaceholderText = "🔑 Enter key here..."
 KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 KeyInput.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
 KeyInput.Font = Enum.Font.GothamBold
-KeyInput.TextSize = 16
+KeyInput.TextSize = 15
 KeyInput.ClearTextOnFocus = false
 KeyInput.Parent = KeyInputFrame
 
--- Status
 local KeyStatus = Instance.new("TextLabel")
-KeyStatus.Size = UDim2.new(1, 0, 0, 25)
-KeyStatus.Position = UDim2.new(0, 0, 0, 75)
+KeyStatus.Size = UDim2.new(1, 0, 0, 20)
+KeyStatus.Position = UDim2.new(0, 0, 0, 58)
 KeyStatus.BackgroundTransparency = 1
 KeyStatus.Text = ""
 KeyStatus.TextColor3 = Color3.fromRGB(255, 100, 100)
 KeyStatus.Font = Enum.Font.GothamBold
-KeyStatus.TextSize = 12
+KeyStatus.TextSize = 11
 KeyStatus.Parent = KeyContent
 
--- Submit
 local SubmitButton = Instance.new("TextButton")
-SubmitButton.Size = UDim2.new(1, 0, 0, 45)
-SubmitButton.Position = UDim2.new(0, 0, 0, 105)
+SubmitButton.Size = UDim2.new(1, 0, 0, 40)
+SubmitButton.Position = UDim2.new(0, 0, 0, 82)
 SubmitButton.BackgroundColor3 = Color3.fromRGB(0, 130, 0)
 SubmitButton.Text = "✅ SUBMIT KEY"
 SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 SubmitButton.Font = Enum.Font.GothamBlack
-SubmitButton.TextSize = 16
+SubmitButton.TextSize = 15
 SubmitButton.Parent = KeyContent
-
 Instance.new("UICorner", SubmitButton).CornerRadius = UDim.new(0, 10)
 
--- Divider
 local Divider = Instance.new("Frame")
-Divider.Size = UDim2.new(1, 0, 0, 2)
-Divider.Position = UDim2.new(0, 0, 0, 165)
+Divider.Size = UDim2.new(1, 0, 0, 1)
+Divider.Position = UDim2.new(0, 0, 0, 138)
 Divider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 Divider.BorderSizePixel = 0
 Divider.Parent = KeyContent
 
 local DividerLabel = Instance.new("TextLabel")
-DividerLabel.Size = UDim2.new(0, 100, 0, 20)
-DividerLabel.Position = UDim2.new(0.5, -50, 0, 155)
+DividerLabel.Size = UDim2.new(0, 80, 0, 16)
+DividerLabel.Position = UDim2.new(0.5, -40, 0, 130)
 DividerLabel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 DividerLabel.Text = "GET KEY"
-DividerLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+DividerLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
 DividerLabel.Font = Enum.Font.GothamBold
-DividerLabel.TextSize = 11
+DividerLabel.TextSize = 10
 DividerLabel.Parent = KeyContent
 
--- Discord
 local DiscordButton = Instance.new("TextButton")
-DiscordButton.Size = UDim2.new(1, 0, 0, 45)
-DiscordButton.Position = UDim2.new(0, 0, 0, 185)
+DiscordButton.Size = UDim2.new(1, 0, 0, 40)
+DiscordButton.Position = UDim2.new(0, 0, 0, 155)
 DiscordButton.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-DiscordButton.Text = "💬 COPY DISCORD INVITE (Get Key)"
+DiscordButton.Text = "💬 COPY DISCORD (Get Key)"
 DiscordButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 DiscordButton.Font = Enum.Font.GothamBold
-DiscordButton.TextSize = 14
+DiscordButton.TextSize = 13
 DiscordButton.Parent = KeyContent
-
 Instance.new("UICorner", DiscordButton).CornerRadius = UDim.new(0, 10)
 
--- YouTube
 local YouTubeButton = Instance.new("TextButton")
-YouTubeButton.Size = UDim2.new(1, 0, 0, 45)
-YouTubeButton.Position = UDim2.new(0, 0, 0, 240)
+YouTubeButton.Size = UDim2.new(1, 0, 0, 40)
+YouTubeButton.Position = UDim2.new(0, 0, 0, 202)
 YouTubeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-YouTubeButton.Text = "📺 COPY YOUTUBE LINK (Subscribe!)"
+YouTubeButton.Text = "📺 COPY YOUTUBE (Subscribe!)"
 YouTubeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 YouTubeButton.Font = Enum.Font.GothamBold
-YouTubeButton.TextSize = 14
+YouTubeButton.TextSize = 13
 YouTubeButton.Parent = KeyContent
-
 Instance.new("UICorner", YouTubeButton).CornerRadius = UDim.new(0, 10)
 
--- Credits (increased size for visibility)
 local KeyCredits = Instance.new("TextLabel")
-KeyCredits.Size = UDim2.new(1, 0, 0, 50)  -- Increased height
-KeyCredits.Position = UDim2.new(0, 0, 0, 300)
+KeyCredits.Size = UDim2.new(1, 0, 0, 40)
+KeyCredits.Position = UDim2.new(0, 0, 0, 255)
 KeyCredits.BackgroundTransparency = 1
-KeyCredits.Text = "Made by KIRA 🔥\nSupport KIRA by subscribing & joining Discord!"
-KeyCredits.TextColor3 = Color3.fromRGB(120, 120, 120)
+KeyCredits.Text = "Made by KIRA 🔥\nDiscord: heaven_nor_hell_"
+KeyCredits.TextColor3 = Color3.fromRGB(100, 100, 100)
 KeyCredits.Font = Enum.Font.Gotham
-KeyCredits.TextSize = 13  -- Increased for visibility
+KeyCredits.TextSize = 11
 KeyCredits.Parent = KeyContent
 
-local MouseWarn = Instance.new("TextLabel")
-MouseWarn.Size = UDim2.new(1, 0, 0, 20)
-MouseWarn.Position = UDim2.new(0, 0, 0, 350)  -- Adjusted position due to larger credits
-MouseWarn.BackgroundTransparency = 1
-MouseWarn.Text = "⚠️ Mouse locked? Spam M or press ENTER to unlock!"
-MouseWarn.TextColor3 = Color3.fromRGB(255, 200, 100)
-MouseWarn.Font = Enum.Font.GothamBold
-MouseWarn.TextSize = 10
-MouseWarn.Parent = KeyContent
-
--- Animations with safe pcall
+-- Key Functions
 local function AnimateKeyPanelIn()
-    local animOk = pcall(function()
-        KeyPanel.Position = UDim2.new(0.5, -210, 0.5, -200)
+    pcall(function()
+        KeyPanel.Position = UDim2.new(0.5, -190, 0.5, -180)
         KeyPanel.BackgroundTransparency = 1
         KeyStroke.Transparency = 1
         KeyGlow.ImageTransparency = 1
         BlurFrame.BackgroundTransparency = 1
         
-        TweenService:Create(BlurFrame, TweenInfo.new(0.5), {BackgroundTransparency = 0.4}):Play()
-        task.wait(0.2)
-        TweenService:Create(KeyPanel, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Position = UDim2.new(0.5, -210, 0.5, -240),
+        TweenService:Create(BlurFrame, TweenInfo.new(0.4), {BackgroundTransparency = 0.4}):Play()
+        task.wait(0.15)
+        TweenService:Create(KeyPanel, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Position = UDim2.new(0.5, -190, 0.5, -210),
             BackgroundTransparency = 0
         }):Play()
-        TweenService:Create(KeyStroke, TweenInfo.new(0.4), {Transparency = 0}):Play()
-        TweenService:Create(KeyGlow, TweenInfo.new(0.8), {ImageTransparency = 0.6}):Play()
+        TweenService:Create(KeyStroke, TweenInfo.new(0.3), {Transparency = 0}):Play()
+        TweenService:Create(KeyGlow, TweenInfo.new(0.6), {ImageTransparency = 0.6}):Play()
     end)
-    if not animOk then
-        -- Fallback: Show without animation
-        KeyPanel.BackgroundTransparency = 0
-        KeyStroke.Transparency = 0
-        KeyGlow.ImageTransparency = 0.6
-        BlurFrame.BackgroundTransparency = 0.4
-    end
 end
 
 local function AnimateKeyPanelOut(callback)
-    local animOk = pcall(function()
-        TweenService:Create(KeyPanel, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-            Position = UDim2.new(0.5, -210, 0.5, -200),
+    pcall(function()
+        TweenService:Create(KeyPanel, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+            Position = UDim2.new(0.5, -190, 0.5, -180),
             BackgroundTransparency = 1
         }):Play()
-        TweenService:Create(KeyStroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
-        TweenService:Create(KeyGlow, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
-        TweenService:Create(BlurFrame, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
-        task.wait(0.5)
+        TweenService:Create(KeyStroke, TweenInfo.new(0.2), {Transparency = 1}):Play()
+        TweenService:Create(KeyGlow, TweenInfo.new(0.2), {ImageTransparency = 1}):Play()
+        TweenService:Create(BlurFrame, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+        task.wait(0.4)
         KeyGui:Destroy()
         if callback then callback() end
     end)
-    if not animOk then
-        KeyGui:Destroy()
-        if callback then callback() end
-    end
 end
 
-local function AddHoverEffect(btn, hover, normal)
+local function AddHover(btn, hover, normal)
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = hover}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = hover}):Play()
     end)
     btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = normal}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = normal}):Play()
     end)
 end
 
-AddHoverEffect(SubmitButton, Color3.fromRGB(0, 160, 0), Color3.fromRGB(0, 130, 0))
-AddHoverEffect(DiscordButton, Color3.fromRGB(110, 125, 255), Color3.fromRGB(88, 101, 242))
-AddHoverEffect(YouTubeButton, Color3.fromRGB(255, 50, 50), Color3.fromRGB(255, 0, 0))
-
-local function ButtonClick(btn)
-    local orig = btn.Size
-    TweenService:Create(btn, TweenInfo.new(0.1), {
-        Size = UDim2.new(orig.X.Scale * 0.95, orig.X.Offset * 0.95, orig.Y.Scale, orig.Y.Offset * 0.95)
-    }):Play()
-    task.wait(0.1)
-    TweenService:Create(btn, TweenInfo.new(0.1), {Size = orig}):Play()
-end
+AddHover(SubmitButton, Color3.fromRGB(0, 160, 0), Color3.fromRGB(0, 130, 0))
+AddHover(DiscordButton, Color3.fromRGB(110, 125, 255), Color3.fromRGB(88, 101, 242))
+AddHover(YouTubeButton, Color3.fromRGB(255, 50, 50), Color3.fromRGB(255, 0, 0))
 
 DiscordButton.MouseButton1Click:Connect(function()
-    ButtonClick(DiscordButton)
     pcall(function() setclipboard(DISCORD_LINK) end)
-    StarterGui:SetCore("SendNotification", {Title = "📋 Copied!", Text = "Discord invite copied!", Duration = 5})
-    KeyStatus.Text = "✅ Discord link copied!"
+    StarterGui:SetCore("SendNotification", {Title = "📋 Copied!", Text = "Discord invite copied!", Duration = 3})
+    KeyStatus.Text = "✅ Discord copied!"
     KeyStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
 end)
 
 YouTubeButton.MouseButton1Click:Connect(function()
-    ButtonClick(YouTubeButton)
     pcall(function() setclipboard(YOUTUBE_LINK) end)
-    StarterGui:SetCore("SendNotification", {Title = "📋 Copied!", Text = "YouTube link copied!", Duration = 5})
-    KeyStatus.Text = "✅ YouTube link copied!"
+    StarterGui:SetCore("SendNotification", {Title = "📋 Copied!", Text = "YouTube link copied!", Duration = 3})
+    KeyStatus.Text = "✅ YouTube copied!"
     KeyStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
 end)
 
 SubmitButton.MouseButton1Click:Connect(function()
-    ButtonClick(SubmitButton)
     local key = KeyInput.Text:gsub("%s+", "")
-    
     if key == "" then
         KeyStatus.Text = "❌ Please enter a key!"
         KeyStatus.TextColor3 = Color3.fromRGB(255, 100, 100)
-        TweenService:Create(KeyInputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(255, 50, 50)}):Play()
-        task.wait(0.5)
-        TweenService:Create(KeyInputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(80, 80, 80)}):Play()
         return
     end
-    
     if key == VALID_KEY then
         KeyStatus.Text = "✅ Key Valid! Loading..."
         KeyStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
-        TweenService:Create(KeyInputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(0, 255, 0)}):Play()
-        TweenService:Create(SubmitButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 200, 0)}):Play()
         pcall(function() if writefile then writefile("KiraLastLetterKey.txt", key) end end)
         KeyVerified = true
-        task.wait(1)
+        task.wait(0.8)
         AnimateKeyPanelOut(LoadMainScript)
     else
-        KeyStatus.Text = "❌ Invalid Key! Join Discord for key."
+        KeyStatus.Text = "❌ Invalid Key! Join Discord."
         KeyStatus.TextColor3 = Color3.fromRGB(255, 100, 100)
-        TweenService:Create(KeyInputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(255, 50, 50)}):Play()
-        local orig = KeyInputFrame.Position
-        for i = 1, 5 do
-            KeyInputFrame.Position = UDim2.new(orig.X.Scale, orig.X.Offset + 5, orig.Y.Scale, orig.Y.Offset)
-            task.wait(0.03)
-            KeyInputFrame.Position = UDim2.new(orig.X.Scale, orig.X.Offset - 5, orig.Y.Scale, orig.Y.Offset)
-            task.wait(0.03)
-        end
-        KeyInputFrame.Position = orig
-        task.wait(0.5)
-        TweenService:Create(KeyInputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(80, 80, 80)}):Play()
     end
 end)
 
 KeyInput.FocusLost:Connect(function(enter)
     if enter then SubmitButton.MouseButton1Click:Fire() end
-end)
-
-KeyInput.Focused:Connect(function()
-    TweenService:Create(KeyInputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(139, 0, 0)}):Play()
 end)
 
 -- ═══════════════════════════════════════════════════════════════
@@ -418,22 +334,31 @@ end)
 
 function LoadMainScript()
 
-local CONFIG = {
-    wordsPerPage = 8,
-    minWordLength = 3,
+local CONFIG = { wordsPerPage = 6, minWordLength = 3 }
+
+-- ═══════════════════════════════════════════════════════════════
+-- 🪑 TABLE CONFIG - ONLY "LAST LETTER" HALL (Tables 1-9)
+-- ═══════════════════════════════════════════════════════════════
+-- Tables 1-9 are in the "Last Letter" hall (negative X positions)
+-- Tables 10-16 are in the "One by One" hall (positive X positions) - EXCLUDED
+
+local TABLE_CONFIG = {
+    ["1v1"] = {1, 2, 3, 4},      -- 4 tables with 0/2 seats
+    ["1v3"] = {5, 6, 7, 8},      -- 4 tables with 0/4 seats
+    ["1v7"] = {9}                -- 1 table with 0/8 seats
 }
 
--- Typing Speeds (including REAL HUMAN!)
+-- Typing Speeds
 local TYPING_SPEEDS = {
-    {name = "🐌 SNAIL", delay = 0.25, randomMin = 20, randomMax = 35, isHuman = false},
-    {name = "👤 HUMAN", delay = 0.10, randomMin = 8, randomMax = 15, isHuman = false},
-    {name = "⚡ MASTER", delay = 0.05, randomMin = 3, randomMax = 8, isHuman = false},
-    {name = "💻 SUPER", delay = 0.02, randomMin = 1, randomMax = 3, isHuman = false},
-    {name = "🧠 REAL", delay = 0.12, randomMin = 10, randomMax = 20, isHuman = true}, -- NEW!
+    {name = "🐌", fullName = "Snail", delay = 0.25, randomMin = 20, randomMax = 35, isHuman = false},
+    {name = "👤", fullName = "Human", delay = 0.10, randomMin = 8, randomMax = 15, isHuman = false},
+    {name = "⚡", fullName = "Master", delay = 0.05, randomMin = 3, randomMax = 8, isHuman = false},
+    {name = "💻", fullName = "Super", delay = 0.02, randomMin = 1, randomMax = 3, isHuman = false},
+    {name = "🧠", fullName = "Real", delay = 0.12, randomMin = 10, randomMax = 20, isHuman = true},
 }
 local SelectedSpeedIndex = 2
 
--- Thinking Delay Options (NEW!)
+-- Thinking Delays
 local THINKING_DELAYS = {
     {name = "0s", delay = 0},
     {name = "0.5s", delay = 0.5},
@@ -443,10 +368,8 @@ local THINKING_DELAYS = {
 }
 local SelectedDelayIndex = 1
 
--- Hard Letters
+-- Hard Letters & Word Ranges
 local HARD_LETTERS_SET = {x=1, z=1, q=1, j=1, v=1, k=1}
-
--- Word Ranges
 local WordRangeOptions = {
     {name = "1-5", min = 1, max = 5},
     {name = "5-10", min = 5, max = 10},
@@ -456,38 +379,19 @@ local WordRangeOptions = {
 }
 local SelectedRangeIndex = 5
 
--- Suggestion Range
-local SuggestionRangeOptions = {
-    {name = "ALL", min = 1, max = 999},
-    {name = "3-5", min = 3, max = 5},
-    {name = "6-8", min = 6, max = 8},
-    {name = "9-12", min = 9, max = 12},
-    {name = "13+", min = 13, max = 999},
-}
-local SelectedSuggestionRange = 1
-
 -- State
-local allWords = {}
-local verifiedWords = {}
-local usedWords = {}
-local topWords = {}
-local myWordsHistory = {}
-local currentPage = 1
-local currentLetters = ""
-
--- Toggles
-local AutoTypeEnabled = false
-local AutoSuggestEnabled = true
-local MeaningfulOnlyMode = true
-local HardWordsMode = false
-local IsMinimized = false
+local allWords, verifiedWords, usedWords, topWords = {}, {}, {}, {}
+local currentPage, currentLetters = 1, ""
+local AutoTypeEnabled, AutoSuggestEnabled = false, true
+local MeaningfulOnlyMode, HardWordsMode = true, false
+local IsMinimized, AutoRetryEnabled = false, false
+local CurrentTab = "TYPE"
 
 -- Dictionaries
 local DICTIONARY_URLS = {
     "https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english-usa-no-swears.txt",
     "https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt",
 }
-
 local BACKUP_DICTIONARY = "https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_dictionary.json"
 
 local VERIFIED_WORDS = {
@@ -498,19 +402,14 @@ local VERIFIED_WORDS = {
     "beautiful", "wonderful", "amazing", "fantastic", "incredible",
     "adventure", "mystery", "journey", "discover", "explore", "travel",
     "mountain", "valley", "river", "ocean", "forest", "desert", "island",
-    "sunshine", "rainbow", "thunder", "lightning", "snowflake",
-    "birthday", "holiday", "festival", "celebration", "anniversary",
-    "chocolate", "vanilla", "strawberry", "blueberry", "raspberry",
-    "xylophone", "xenon", "box", "fox", "mix", "fix", "six", "tax", "wax", "max",
-    "flex", "apex", "index", "relax", "complex", "reflex", "vertex", "phoenix", "matrix",
-    "jazz", "buzz", "fizz", "fuzz", "quiz", "whiz", "topaz", "waltz",
-    "queue", "unique", "antique", "boutique", "technique", "mystique",
-    "jealousy", "zealous", "rhythm", "symphony", "melody", "harmony",
+    "xylophone", "xenon", "box", "fox", "mix", "fix", "six", "tax", "wax",
+    "jazz", "buzz", "fizz", "quiz", "whiz", "topaz", "waltz",
+    "queue", "unique", "antique", "boutique", "technique",
 }
 
 local EXCLUDED_PATTERNS = {"^[bcdfghjklmnpqrstvwxyz]+$", "^[aeiou]+$", "(..)%1%1", "^..$", "^.$"}
-local EXCLUDED_WORDS = {["aa"]=1,["aaa"]=1,["bb"]=1,["cc"]=1,["hmm"]=1,["uhh"]=1,["grr"]=1}
-local SKIP_COMMON = {["the"]=1,["and"]=1,["a"]=1,["an"]=1,["is"]=1,["it"]=1,["to"]=1,["of"]=1}
+local EXCLUDED_WORDS = {["aa"]=1,["aaa"]=1,["bb"]=1,["cc"]=1,["hmm"]=1,["uhh"]=1}
+local SKIP_COMMON = {["the"]=1,["and"]=1,["a"]=1,["an"]=1,["is"]=1,["it"]=1,["to"]=1}
 
 -- Validation
 local function HasProperStructure(word)
@@ -537,7 +436,102 @@ local function EndsWithHardLetter(word)
 end
 
 -- ═══════════════════════════════════════════════════════════════
--- 🎨 CREATE UI (Android Compatible - Smaller Size)
+-- 🪑 TABLE AUTO-JOIN SYSTEM (LAST LETTER HALL ONLY)
+-- ═══════════════════════════════════════════════════════════════
+
+local function GetTableStatus(tableNum)
+    local tbl = workspace.Tables:FindFirstChild(tostring(tableNum))
+    if not tbl then return nil end
+    local billboard = tbl:FindFirstChild("Billboard")
+    if not billboard then return nil end
+    
+    for _, obj in pairs(billboard:GetDescendants()) do
+        if obj:IsA("TextLabel") then
+            local current, max = obj.Text:match("(%d+)/(%d+)")
+            if current and max then
+                return {
+                    current = tonumber(current),
+                    max = tonumber(max),
+                    full = tonumber(current) >= tonumber(max),
+                    table = tbl,
+                    billboard = billboard
+                }
+            end
+        end
+    end
+    return nil
+end
+
+local function GetAvailableTables(mode)
+    local tables = TABLE_CONFIG[mode]
+    if not tables then return {} end
+    local available = {}
+    for _, tableNum in ipairs(tables) do
+        local status = GetTableStatus(tableNum)
+        if status and not status.full then
+            table.insert(available, {
+                number = tableNum,
+                status = status,
+                position = status.table:GetPivot().Position
+            })
+        end
+    end
+    return available
+end
+
+local function TeleportToTable(tableNum)
+    local tbl = workspace.Tables:FindFirstChild(tostring(tableNum))
+    if not tbl then return false, "Table not found" end
+    
+    local billboard = tbl:FindFirstChild("Billboard")
+    if not billboard then return false, "Billboard not found" end
+    
+    local char = player.Character
+    if not char then return false, "No character" end
+    
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return false, "No HumanoidRootPart" end
+    
+    local targetPos = billboard:GetPivot().Position + Vector3.new(0, 3, 5)
+    hrp.CFrame = CFrame.new(targetPos)
+    task.wait(0.3)
+    
+    local prompt = billboard:FindFirstChild("Prompt", true)
+    if prompt and prompt:IsA("ProximityPrompt") then
+        fireproximityprompt(prompt)
+        return true, "Joined Table #" .. tableNum .. "!"
+    end
+    return false, "Prompt not found"
+end
+
+local function JoinGameMode(mode)
+    local available = GetAvailableTables(mode)
+    if #available == 0 then
+        return false, "All " .. mode .. " tables occupied!"
+    end
+    
+    local char = player.Character
+    if not char then return false, "No character" end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return false, "No HumanoidRootPart" end
+    
+    local playerPos = hrp.Position
+    local nearest = available[1]
+    local nearestDist = (playerPos - nearest.position).Magnitude
+    
+    for i = 2, #available do
+        local dist = (playerPos - available[i].position).Magnitude
+        if dist < nearestDist then
+            nearest = available[i]
+            nearestDist = dist
+        end
+    end
+    
+    return TeleportToTable(nearest.number)
+end
+
+-- ═══════════════════════════════════════════════════════════════
+-- 🎨 CREATE TAB UI
 -- ═══════════════════════════════════════════════════════════════
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -545,32 +539,29 @@ ScreenGui.Name = "KiraLastLetter_" .. math.random(100000, 999999)
 ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Parent = CoreGui or gethui()
-env.KiraLastLetterV32 = ScreenGui.Name
+env.KiraLastLetterV35 = ScreenGui.Name
 
--- Detect if mobile (for Android compatibility)
 local isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
 
--- Main Frame (Smaller for Android)
+-- Main Frame
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = isMobile and UDim2.new(0, 300, 0, 500) or UDim2.new(0, 470, 0, 720)  -- Smaller on mobile
-MainFrame.Position = UDim2.new(0.5, -MainFrame.Size.X.Offset/2, 0.5, -MainFrame.Size.Y.Offset/2)  -- Centered
-MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+MainFrame.Size = isMobile and UDim2.new(0, 340, 0, 320) or UDim2.new(0, 580, 0, 380)
+MainFrame.Position = UDim2.new(0.5, -MainFrame.Size.X.Offset/2, 0.5, -MainFrame.Size.Y.Offset/2)
+MainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 MainFrame.BorderSizePixel = 0
 MainFrame.BackgroundTransparency = 1
 MainFrame.Parent = ScreenGui
-
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 16)
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 14)
 
 local MainStroke = Instance.new("UIStroke")
-MainStroke.Color = Color3.fromRGB(200, 0, 40)
-MainStroke.Thickness = 3
+MainStroke.Color = Color3.fromRGB(180, 0, 40)
+MainStroke.Thickness = 2
 MainStroke.Transparency = 1
 MainStroke.Parent = MainFrame
 
--- Glow
 local GlowFrame = Instance.new("ImageLabel")
-GlowFrame.Size = UDim2.new(1, 60, 1, 60)
+GlowFrame.Size = UDim2.new(1, 50, 1, 50)
 GlowFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 GlowFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 GlowFrame.BackgroundTransparency = 1
@@ -581,18 +572,17 @@ GlowFrame.ScaleType = Enum.ScaleType.Slice
 GlowFrame.SliceCenter = Rect.new(24, 24, 276, 276)
 GlowFrame.Parent = MainFrame
 
--- Header (Scaled for mobile)
+-- Header
 local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1, 0, 0, isMobile and 50 or 65)
+Header.Size = UDim2.new(1, 0, 0, isMobile and 40 or 48)
 Header.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
 Header.BorderSizePixel = 0
 Header.Parent = MainFrame
-
-Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 16)
+Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 14)
 
 local HeaderFix = Instance.new("Frame")
-HeaderFix.Size = UDim2.new(1, 0, 0, 20)
-HeaderFix.Position = UDim2.new(0, 0, 1, -20)
+HeaderFix.Size = UDim2.new(1, 0, 0, 16)
+HeaderFix.Position = UDim2.new(0, 0, 1, -16)
 HeaderFix.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
 HeaderFix.BorderSizePixel = 0
 HeaderFix.Parent = Header
@@ -606,503 +596,661 @@ HeaderGradient.Color = ColorSequence.new{
 HeaderGradient.Rotation = 45
 HeaderGradient.Parent = Header
 
--- Title
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(0, isMobile and 200 or 280, 0, isMobile and 24 or 28)
-Title.Position = UDim2.new(0, 15, 0, isMobile and 5 or 10)
+Title.Size = UDim2.new(0.7, 0, 1, 0)
+Title.Position = UDim2.new(0, 12, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🔥 KIRA HUB"
+Title.Text = "🔥 KIRA HUB • Last Letter v3.5"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBlack
-Title.TextSize = isMobile and 16 or 20
+Title.TextSize = isMobile and 12 or 15
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Header
 
-local Subtitle = Instance.new("TextLabel")
-Subtitle.Size = UDim2.new(0, isMobile and 200 or 280, 0, isMobile and 16 or 18)
-Subtitle.Position = UDim2.new(0, 15, 0, isMobile and 29 or 38)
-Subtitle.BackgroundTransparency = 1
-Subtitle.Text = "[ LAST LETTER ] v3.2 FINAL"
-Subtitle.TextColor3 = Color3.fromRGB(255, 220, 150)
-Subtitle.Font = Enum.Font.GothamBold
-Subtitle.TextSize = isMobile and 11 or 13
-Subtitle.TextXAlignment = Enum.TextXAlignment.Left
-Subtitle.Parent = Header
+-- Controls
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, isMobile and 26 or 30, 0, isMobile and 26 or 30)
+CloseButton.Position = UDim2.new(1, isMobile and -32 or -38, 0.5, isMobile and -13 or -15)
+CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseButton.Text = "✕"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = isMobile and 12 or 14
+CloseButton.Parent = Header
+Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 6)
 
--- Controls (Adjusted for mobile)
-local function CreateCtrlBtn(text, pos, color)
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Size = UDim2.new(0, isMobile and 26 or 30, 0, isMobile and 26 or 30)
+MinimizeButton.Position = UDim2.new(1, isMobile and -62 or -72, 0.5, isMobile and -13 or -15)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+MinimizeButton.Text = "—"
+MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeButton.Font = Enum.Font.GothamBold
+MinimizeButton.TextSize = isMobile and 12 or 14
+MinimizeButton.Parent = Header
+Instance.new("UICorner", MinimizeButton).CornerRadius = UDim.new(0, 6)
+
+-- Tab Bar (Reordered: TYPE → JOIN → CREDITS)
+local TabBar = Instance.new("Frame")
+TabBar.Size = UDim2.new(1, 0, 0, isMobile and 32 or 38)
+TabBar.Position = UDim2.new(0, 0, 0, isMobile and 40 or 48)
+TabBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+TabBar.BorderSizePixel = 0
+TabBar.Parent = MainFrame
+
+local TabButtons = {}
+local Tabs = {"⚡ TYPE", "🎮 JOIN", "📜 CREDITS"}
+local TabNames = {"TYPE", "JOIN", "CREDITS"}
+
+for i, tabName in ipairs(Tabs) do
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, isMobile and 24 or 30, 0, isMobile and 24 or 30)
-    btn.Position = pos
-    btn.BackgroundColor3 = color
-    btn.Text = text
+    btn.Size = UDim2.new(1/3, -4, 1, -6)
+    btn.Position = UDim2.new((i-1)/3, 2, 0, 3)
+    btn.BackgroundColor3 = (i == 1) and Color3.fromRGB(139, 0, 0) or Color3.fromRGB(35, 35, 35)
+    btn.Text = tabName
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = isMobile and 12 or 14
-    btn.Parent = Header
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
-    btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, isMobile and 28 or 34, 0, isMobile and 28 or 34)}):Play()
-    end)
-    btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, isMobile and 24 or 30, 0, isMobile and 24 or 30)}):Play()
-    end)
-    return btn
+    btn.TextSize = isMobile and 10 or 12
+    btn.Parent = TabBar
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    TabButtons[TabNames[i]] = btn
 end
 
-local CloseButton = CreateCtrlBtn("✕", UDim2.new(1, isMobile and -32 or -40, 0, isMobile and 13 or 17), Color3.fromRGB(200, 50, 50))
-local MinimizeButton = CreateCtrlBtn("—", UDim2.new(1, isMobile and -60 or -75, 0, isMobile and 13 or 17), Color3.fromRGB(70, 70, 70))
+-- Content Area
+local ContentArea = Instance.new("Frame")
+ContentArea.Size = isMobile and UDim2.new(0.55, -8, 1, -80) or UDim2.new(0.6, -10, 1, -94)
+ContentArea.Position = UDim2.new(0, 6, 0, isMobile and 74 or 88)
+ContentArea.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+ContentArea.BorderSizePixel = 0
+ContentArea.Parent = MainFrame
+Instance.new("UICorner", ContentArea).CornerRadius = UDim.new(0, 10)
 
--- Content (Adjusted height/position for mobile)
-local ContentFrame = Instance.new("Frame")
-ContentFrame.Size = UDim2.new(1, -20, 1, isMobile and -60 or -75)
-ContentFrame.Position = UDim2.new(0, 10, 0, isMobile and 55 or 70)
-ContentFrame.BackgroundTransparency = 1
-ContentFrame.Parent = MainFrame
+-- Sidebar
+local Sidebar = Instance.new("Frame")
+Sidebar.Size = isMobile and UDim2.new(0.45, -8, 1, -80) or UDim2.new(0.4, -10, 1, -94)
+Sidebar.Position = isMobile and UDim2.new(0.55, 2, 0, 74) or UDim2.new(0.6, 4, 0, 88)
+Sidebar.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+Sidebar.BorderSizePixel = 0
+Sidebar.Parent = MainFrame
+Instance.new("UICorner", Sidebar).CornerRadius = UDim.new(0, 10)
 
--- ═══════════════════════════════════════════════════════════════
--- 🎛️ TOGGLES (Scaled for mobile)
--- ═══════════════════════════════════════════════════════════════
-
-local ToggleSection = Instance.new("Frame")
-ToggleSection.Size = UDim2.new(1, 0, 0, isMobile and 40 or 50)
-ToggleSection.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-ToggleSection.BorderSizePixel = 0
-ToggleSection.Parent = ContentFrame
-Instance.new("UICorner", ToggleSection).CornerRadius = UDim.new(0, 10)
-
-local function CreateToggle(name, text, pos, default, width)
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(width or 0.24, -3, 0, isMobile and 35 or 45)
-    frame.Position = pos
-    frame.BackgroundTransparency = 1
-    frame.Parent = ToggleSection
-
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 0, isMobile and 12 or 14)
-    label.Position = UDim2.new(0, 0, 0, isMobile and 2 or 3)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.TextColor3 = Color3.fromRGB(180, 180, 180)
-    label.Font = Enum.Font.GothamBold
-    label.TextSize = isMobile and 8 or 9
-    label.TextScaled = true
-    label.Parent = frame
-
-    local btn = Instance.new("TextButton")
-    btn.Name = name
-    btn.Size = UDim2.new(1, -4, 0, isMobile and 18 or 22)
-    btn.Position = UDim2.new(0, 2, 0, isMobile and 16 or 20)
-    btn.BackgroundColor3 = default and Color3.fromRGB(0, 110, 0) or Color3.fromRGB(110, 0, 0)
-    btn.Text = default and "✅ ON" or "❌ OFF"
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = isMobile and 8 or 10
-    btn.Parent = frame
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
-    
-    return btn
-end
-
-local AutoTypeToggle = CreateToggle("AutoType", "⚡ AUTO-TYPE", UDim2.new(0, 0, 0, 2), false, 0.25)
-local AutoSuggestToggle = CreateToggle("AutoSuggest", "💡 SUGGEST", UDim2.new(0.25, 0, 0, 2), true, 0.25)
-local MeaningfulToggle = CreateToggle("Meaningful", "✓ REAL", UDim2.new(0.50, 0, 0, 2), true, 0.25)
-local HardWordsToggle = CreateToggle("HardWords", "💀 HARD", UDim2.new(0.75, 0, 0, 2), false, 0.25)
+local SidebarStroke = Instance.new("UIStroke")
+SidebarStroke.Color = Color3.fromRGB(60, 60, 60)
+SidebarStroke.Thickness = 1
+SidebarStroke.Parent = Sidebar
 
 -- ═══════════════════════════════════════════════════════════════
--- ⚡ TYPING SPEED (WITH REAL HUMAN!) - Scaled
+-- 📝 SIDEBAR - LETTERS & SUGGESTIONS
 -- ═══════════════════════════════════════════════════════════════
 
-local SpeedSection = Instance.new("Frame")
-SpeedSection.Size = UDim2.new(1, 0, 0, isMobile and 35 or 45)
-SpeedSection.Position = UDim2.new(0, 0, 0, isMobile and 45 or 55)
-SpeedSection.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-SpeedSection.BorderSizePixel = 0
-SpeedSection.Parent = ContentFrame
-Instance.new("UICorner", SpeedSection).CornerRadius = UDim.new(0, 8)
-
-local SpeedTitle = Instance.new("TextLabel")
-SpeedTitle.Size = UDim2.new(1, -10, 0, isMobile and 14 or 16)
-SpeedTitle.Position = UDim2.new(0, 10, 0, isMobile and 2 or 3)
-SpeedTitle.BackgroundTransparency = 1
-SpeedTitle.Text = "⌨️ TYPING SPEED (🧠 REAL = Human Mistakes!)"
-SpeedTitle.TextColor3 = Color3.fromRGB(255, 200, 100)
-SpeedTitle.Font = Enum.Font.GothamBold
-SpeedTitle.TextSize = isMobile and 8 or 9
-SpeedTitle.TextXAlignment = Enum.TextXAlignment.Left
-SpeedTitle.Parent = SpeedSection
-
-local SpeedButtonsFrame = Instance.new("Frame")
-SpeedButtonsFrame.Size = UDim2.new(1, -10, 0, isMobile and 18 or 22)
-SpeedButtonsFrame.Position = UDim2.new(0, 5, 0, isMobile and 16 or 20)
-SpeedButtonsFrame.BackgroundTransparency = 1
-SpeedButtonsFrame.Parent = SpeedSection
-
-local SpeedButtons = {}
-for i, speed in ipairs(TYPING_SPEEDS) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.19, -3, 1, 0)
-    btn.Position = UDim2.new((i-1) * 0.2, 2, 0, 0)
-    btn.BackgroundColor3 = (i == SelectedSpeedIndex) and Color3.fromRGB(139, 0, 0) or Color3.fromRGB(40, 40, 40)
-    btn.Text = speed.name
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = isMobile and 8 or 9
-    btn.Parent = SpeedButtonsFrame
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
-    SpeedButtons[i] = btn
-end
-
--- ═══════════════════════════════════════════════════════════════
--- ⏱️ THINKING DELAY (NEW!) - Scaled
--- ═══════════════════════════════════════════════════════════════
-
-local DelaySection = Instance.new("Frame")
-DelaySection.Size = UDim2.new(1, 0, 0, isMobile and 35 or 45)
-DelaySection.Position = UDim2.new(0, 0, 0, isMobile and 85 or 105)
-DelaySection.BackgroundColor3 = Color3.fromRGB(30, 20, 40)
-DelaySection.BorderSizePixel = 0
-DelaySection.Parent = ContentFrame
-Instance.new("UICorner", DelaySection).CornerRadius = UDim.new(0, 8)
-
-local DelayTitle = Instance.new("TextLabel")
-DelayTitle.Size = UDim2.new(1, -10, 0, isMobile and 14 or 16)
-DelayTitle.Position = UDim2.new(0, 10, 0, isMobile and 2 or 3)
-DelayTitle.BackgroundTransparency = 1
-DelayTitle.Text = "⏱️ THINKING DELAY (Wait before typing)"
-DelayTitle.TextColor3 = Color3.fromRGB(200, 150, 255)
-DelayTitle.Font = Enum.Font.GothamBold
-DelayTitle.TextSize = isMobile and 8 or 10
-DelayTitle.TextXAlignment = Enum.TextXAlignment.Left
-DelayTitle.Parent = DelaySection
-
-local DelayButtonsFrame = Instance.new("Frame")
-DelayButtonsFrame.Size = UDim2.new(1, -10, 0, isMobile and 18 or 22)
-DelayButtonsFrame.Position = UDim2.new(0, 5, 0, isMobile and 16 or 20)
-DelayButtonsFrame.BackgroundTransparency = 1
-DelayButtonsFrame.Parent = DelaySection
-
-local DelayButtons = {}
-for i, d in ipairs(THINKING_DELAYS) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.19, -3, 1, 0)
-    btn.Position = UDim2.new((i-1) * 0.2, 2, 0, 0)
-    btn.BackgroundColor3 = (i == SelectedDelayIndex) and Color3.fromRGB(100, 50, 150) or Color3.fromRGB(40, 40, 40)
-    btn.Text = d.name
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = isMobile and 9 or 11
-    btn.Parent = DelayButtonsFrame
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
-    DelayButtons[i] = btn
-end
-
--- ═══════════════════════════════════════════════════════════════
--- 📏 WORD RANGE - Scaled
--- ═══════════════════════════════════════════════════════════════
-
-local RangeSection = Instance.new("Frame")
-RangeSection.Size = UDim2.new(1, 0, 0, isMobile and 35 or 45)
-RangeSection.Position = UDim2.new(0, 0, 0, isMobile and 125 or 155)
-RangeSection.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
-RangeSection.BorderSizePixel = 0
-RangeSection.Parent = ContentFrame
-Instance.new("UICorner", RangeSection).CornerRadius = UDim.new(0, 8)
-
-local RangeTitle = Instance.new("TextLabel")
-RangeTitle.Size = UDim2.new(1, -10, 0, isMobile and 14 or 16)
-RangeTitle.Position = UDim2.new(0, 10, 0, isMobile and 2 or 3)
-RangeTitle.BackgroundTransparency = 1
-RangeTitle.Text = "📏 AUTO-TYPE RANGE"
-RangeTitle.TextColor3 = Color3.fromRGB(100, 200, 255)
-RangeTitle.Font = Enum.Font.GothamBold
-RangeTitle.TextSize = isMobile and 8 or 10
-RangeTitle.TextXAlignment = Enum.TextXAlignment.Left
-RangeTitle.Parent = RangeSection
-
-local RangeButtonsFrame = Instance.new("Frame")
-RangeButtonsFrame.Size = UDim2.new(1, -10, 0, isMobile and 18 or 22)
-RangeButtonsFrame.Position = UDim2.new(0, 5, 0, isMobile and 16 or 20)
-RangeButtonsFrame.BackgroundTransparency = 1
-RangeButtonsFrame.Parent = RangeSection
-
-local RangeButtons = {}
-for i, r in ipairs(WordRangeOptions) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.19, -3, 1, 0)
-    btn.Position = UDim2.new((i-1) * 0.2, 2, 0, 0)
-    btn.BackgroundColor3 = (i == SelectedRangeIndex) and Color3.fromRGB(139, 0, 0) or Color3.fromRGB(40, 40, 40)
-    btn.Text = r.name
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = isMobile and 8 or 10
-    btn.Parent = RangeButtonsFrame
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
-    RangeButtons[i] = btn
-end
-
--- ═══════════════════════════════════════════════════════════════
--- 🔍 LETTERS DISPLAY - Scaled
--- ═══════════════════════════════════════════════════════════════
-
-local LettersSection = Instance.new("Frame")
-LettersSection.Size = UDim2.new(1, 0, 0, isMobile and 45 or 55)
-LettersSection.Position = UDim2.new(0, 0, 0, isMobile and 165 or 205)
-LettersSection.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-LettersSection.BorderSizePixel = 0
-LettersSection.Parent = ContentFrame
-Instance.new("UICorner", LettersSection).CornerRadius = UDim.new(0, 10)
+local LettersBox = Instance.new("Frame")
+LettersBox.Size = UDim2.new(1, -10, 0, isMobile and 50 or 60)
+LettersBox.Position = UDim2.new(0, 5, 0, 5)
+LettersBox.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+LettersBox.BorderSizePixel = 0
+LettersBox.Parent = Sidebar
+Instance.new("UICorner", LettersBox).CornerRadius = UDim.new(0, 8)
 
 local LettersGradient = Instance.new("UIGradient")
 LettersGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 0, 40)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 20))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(160, 0, 40)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 25))
 }
 LettersGradient.Rotation = 90
-LettersGradient.Parent = LettersSection
+LettersGradient.Parent = LettersBox
 
 local CurrentLettersLabel = Instance.new("TextLabel")
-CurrentLettersLabel.Size = UDim2.new(1, 0, 0, isMobile and 26 or 32)
-CurrentLettersLabel.Position = UDim2.new(0, 0, 0, isMobile and 4 or 5)
+CurrentLettersLabel.Size = UDim2.new(1, 0, 0, isMobile and 28 or 34)
+CurrentLettersLabel.Position = UDim2.new(0, 0, 0, isMobile and 3 or 5)
 CurrentLettersLabel.BackgroundTransparency = 1
 CurrentLettersLabel.Text = "---"
 CurrentLettersLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 CurrentLettersLabel.Font = Enum.Font.GothamBlack
-CurrentLettersLabel.TextSize = isMobile and 24 or 30
-CurrentLettersLabel.Parent = LettersSection
+CurrentLettersLabel.TextSize = isMobile and 20 or 26
+CurrentLettersLabel.Parent = LettersBox
 
 local LettersSubtext = Instance.new("TextLabel")
-LettersSubtext.Size = UDim2.new(1, 0, 0, isMobile and 13 or 15)
-LettersSubtext.Position = UDim2.new(0, 0, 0, isMobile and 30 or 37)
+LettersSubtext.Size = UDim2.new(1, 0, 0, isMobile and 12 or 14)
+LettersSubtext.Position = UDim2.new(0, 0, 0, isMobile and 32 or 40)
 LettersSubtext.BackgroundTransparency = 1
-LettersSubtext.Text = "⏳ Waiting for letters..."
+LettersSubtext.Text = "⏳ Waiting..."
 LettersSubtext.TextColor3 = Color3.fromRGB(200, 200, 200)
 LettersSubtext.Font = Enum.Font.GothamBold
 LettersSubtext.TextSize = isMobile and 8 or 10
-LettersSubtext.Parent = LettersSection
+LettersSubtext.Parent = LettersBox
 
--- ═══════════════════════════════════════════════════════════════
--- 📋 SUGGESTION FILTER - Scaled
--- ═══════════════════════════════════════════════════════════════
+local SuggestHeader = Instance.new("Frame")
+SuggestHeader.Size = UDim2.new(1, -10, 0, isMobile and 20 or 24)
+SuggestHeader.Position = UDim2.new(0, 5, 0, isMobile and 58 or 70)
+SuggestHeader.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+SuggestHeader.BorderSizePixel = 0
+SuggestHeader.Parent = Sidebar
+Instance.new("UICorner", SuggestHeader).CornerRadius = UDim.new(0, 5)
 
-local SuggestFilterSection = Instance.new("Frame")
-SuggestFilterSection.Size = UDim2.new(1, 0, 0, isMobile and 25 or 30)
-SuggestFilterSection.Position = UDim2.new(0, 0, 0, isMobile and 215 or 265)
-SuggestFilterSection.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-SuggestFilterSection.BorderSizePixel = 0
-SuggestFilterSection.Parent = ContentFrame
-Instance.new("UICorner", SuggestFilterSection).CornerRadius = UDim.new(0, 8)
-
-local FilterTitle = Instance.new("TextLabel")
-FilterTitle.Size = UDim2.new(0, isMobile and 50 or 60, 1, 0)
-FilterTitle.Position = UDim2.new(0, 8, 0, 0)
-FilterTitle.BackgroundTransparency = 1
-FilterTitle.Text = "📊 FILTER:"
-FilterTitle.TextColor3 = Color3.fromRGB(180, 180, 180)
-FilterTitle.Font = Enum.Font.GothamBold
-FilterTitle.TextSize = isMobile and 8 or 9
-FilterTitle.TextXAlignment = Enum.TextXAlignment.Left
-FilterTitle.Parent = SuggestFilterSection
-
-local SuggestRangeButtons = {}
-for i, r in ipairs(SuggestionRangeOptions) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, isMobile and 40 or 50, 0, isMobile and 18 or 20)
-    btn.Position = UDim2.new(0, isMobile and 55 + (i-1)*45 or 65 + (i-1)*55, 0.5, isMobile and -9 or -10)
-    btn.BackgroundColor3 = (i == SelectedSuggestionRange) and Color3.fromRGB(0, 100, 150) or Color3.fromRGB(45, 45, 45)
-    btn.Text = r.name
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = isMobile and 8 or 9
-    btn.Parent = SuggestFilterSection
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
-    SuggestRangeButtons[i] = btn
-end
-
--- ═══════════════════════════════════════════════════════════════
--- 📝 SUGGESTIONS LIST - Scaled with scrolling
--- ═══════════════════════════════════════════════════════════════
-
-local SuggestionsFrame = Instance.new("Frame")
-SuggestionsFrame.Size = UDim2.new(1, 0, 0, isMobile and 150 or 230)
-SuggestionsFrame.Position = UDim2.new(0, 0, 0, isMobile and 245 or 300)
-SuggestionsFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-SuggestionsFrame.BorderSizePixel = 0
-SuggestionsFrame.ClipsDescendants = true
-SuggestionsFrame.Parent = ContentFrame
-Instance.new("UICorner", SuggestionsFrame).CornerRadius = UDim.new(0, 10)
-
-local SuggestionsHeader = Instance.new("Frame")
-SuggestionsHeader.Size = UDim2.new(1, 0, 0, isMobile and 18 or 22)
-SuggestionsHeader.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-SuggestionsHeader.BorderSizePixel = 0
-SuggestionsHeader.Parent = SuggestionsFrame
-
-local SuggestionsTitle = Instance.new("TextLabel")
-SuggestionsTitle.Size = UDim2.new(0.6, 0, 1, 0)
-SuggestionsTitle.Position = UDim2.new(0, 10, 0, 0)
-SuggestionsTitle.BackgroundTransparency = 1
-SuggestionsTitle.Text = "📝 AUTO-SUGGESTIONS"
-SuggestionsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-SuggestionsTitle.Font = Enum.Font.GothamBold
-SuggestionsTitle.TextSize = isMobile and 8 or 10
-SuggestionsTitle.TextXAlignment = Enum.TextXAlignment.Left
-SuggestionsTitle.Parent = SuggestionsHeader
+local SuggestTitle = Instance.new("TextLabel")
+SuggestTitle.Size = UDim2.new(0.55, 0, 1, 0)
+SuggestTitle.Position = UDim2.new(0, 6, 0, 0)
+SuggestTitle.BackgroundTransparency = 1
+SuggestTitle.Text = "📝 WORDS"
+SuggestTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+SuggestTitle.Font = Enum.Font.GothamBold
+SuggestTitle.TextSize = isMobile and 9 or 11
+SuggestTitle.TextXAlignment = Enum.TextXAlignment.Left
+SuggestTitle.Parent = SuggestHeader
 
 local MatchCountLabel = Instance.new("TextLabel")
-MatchCountLabel.Size = UDim2.new(0.35, 0, 1, 0)
-MatchCountLabel.Position = UDim2.new(0.63, 0, 0, 0)
+MatchCountLabel.Size = UDim2.new(0.4, 0, 1, 0)
+MatchCountLabel.Position = UDim2.new(0.58, 0, 0, 0)
 MatchCountLabel.BackgroundTransparency = 1
-MatchCountLabel.Text = "0 found"
-MatchCountLabel.TextColor3 = Color3.fromRGB(0, 255, 150)
+MatchCountLabel.Text = "0"
+MatchCountLabel.TextColor3 = Color3.fromRGB(0, 255, 120)
 MatchCountLabel.Font = Enum.Font.GothamBold
-MatchCountLabel.TextSize = isMobile and 8 or 10
+MatchCountLabel.TextSize = isMobile and 9 or 11
 MatchCountLabel.TextXAlignment = Enum.TextXAlignment.Right
-MatchCountLabel.Parent = SuggestionsHeader
+MatchCountLabel.Parent = SuggestHeader
 
 local SuggestionsList = Instance.new("ScrollingFrame")
-SuggestionsList.Size = UDim2.new(1, -10, 1, isMobile and -20 or -28)
-SuggestionsList.Position = UDim2.new(0, 5, 0, isMobile and 20 or 24)
+SuggestionsList.Size = UDim2.new(1, -10, 1, isMobile and -115 or -135)
+SuggestionsList.Position = UDim2.new(0, 5, 0, isMobile and 80 or 97)
 SuggestionsList.BackgroundTransparency = 1
-SuggestionsList.ScrollBarThickness = isMobile and 3 or 5
+SuggestionsList.ScrollBarThickness = 3
 SuggestionsList.ScrollBarImageColor3 = Color3.fromRGB(139, 0, 0)
 SuggestionsList.CanvasSize = UDim2.new(0, 0, 0, 0)
-SuggestionsList.Parent = SuggestionsFrame
+SuggestionsList.Parent = Sidebar
 
 local SuggestionsLayout = Instance.new("UIListLayout")
 SuggestionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-SuggestionsLayout.Padding = UDim.new(0, isMobile and 3 or 4)
+SuggestionsLayout.Padding = UDim.new(0, 3)
 SuggestionsLayout.Parent = SuggestionsList
 
--- ═══════════════════════════════════════════════════════════════
--- 📄 PAGINATION - Scaled
--- ═══════════════════════════════════════════════════════════════
-
 local PaginationFrame = Instance.new("Frame")
-PaginationFrame.Size = UDim2.new(1, 0, 0, isMobile and 24 or 28)
-PaginationFrame.Position = UDim2.new(0, 0, 0, isMobile and 400 or 535)
+PaginationFrame.Size = UDim2.new(1, -10, 0, isMobile and 22 or 26)
+PaginationFrame.Position = UDim2.new(0, 5, 1, isMobile and -27 or -31)
 PaginationFrame.BackgroundTransparency = 1
-PaginationFrame.Parent = ContentFrame
+PaginationFrame.Parent = Sidebar
 
 local PrevButton = Instance.new("TextButton")
-PrevButton.Size = UDim2.new(0, isMobile and 50 or 60, 0, isMobile and 20 or 24)
+PrevButton.Size = UDim2.new(0, isMobile and 35 or 45, 0, isMobile and 20 or 24)
 PrevButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-PrevButton.Text = "◀ PREV"
+PrevButton.Text = "◀"
 PrevButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 PrevButton.Font = Enum.Font.GothamBold
-PrevButton.TextSize = isMobile and 9 or 10
+PrevButton.TextSize = isMobile and 10 or 12
 PrevButton.Parent = PaginationFrame
 Instance.new("UICorner", PrevButton).CornerRadius = UDim.new(0, 5)
 
 local PageLabel = Instance.new("TextLabel")
-PageLabel.Size = UDim2.new(0, isMobile and 70 or 80, 0, isMobile and 20 or 24)
-PageLabel.Position = UDim2.new(0.5, isMobile and -35 or -40, 0, 0)
+PageLabel.Size = UDim2.new(1, isMobile and -80 or -100, 0, isMobile and 20 or 24)
+PageLabel.Position = UDim2.new(0.5, 0, 0, 0)
+PageLabel.AnchorPoint = Vector2.new(0.5, 0)
 PageLabel.BackgroundTransparency = 1
-PageLabel.Text = "Page 1/1"
+PageLabel.Text = "1/1"
 PageLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
 PageLabel.Font = Enum.Font.GothamBold
-PageLabel.TextSize = isMobile and 10 or 11
+PageLabel.TextSize = isMobile and 10 or 12
 PageLabel.Parent = PaginationFrame
 
 local NextButton = Instance.new("TextButton")
-NextButton.Size = UDim2.new(0, isMobile and 50 or 60, 0, isMobile and 20 or 24)
-NextButton.Position = UDim2.new(1, isMobile and -50 or -60, 0, 0)
+NextButton.Size = UDim2.new(0, isMobile and 35 or 45, 0, isMobile and 20 or 24)
+NextButton.Position = UDim2.new(1, isMobile and -35 or -45, 0, 0)
 NextButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-NextButton.Text = "NEXT ▶"
+NextButton.Text = "▶"
 NextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 NextButton.Font = Enum.Font.GothamBold
-NextButton.TextSize = isMobile and 9 or 10
+NextButton.TextSize = isMobile and 10 or 12
 NextButton.Parent = PaginationFrame
 Instance.new("UICorner", NextButton).CornerRadius = UDim.new(0, 5)
 
 -- ═══════════════════════════════════════════════════════════════
--- 🔧 CREDITS (increased visibility)
+-- ⚡ TAB 1: TYPE (First Tab Now)
 -- ═══════════════════════════════════════════════════════════════
 
-local CreditsFrame = Instance.new("Frame")
-CreditsFrame.Size = UDim2.new(1, 0, 0, isMobile and 25 or 30)  -- Scaled for mobile
-CreditsFrame.Position = UDim2.new(0, 0, 1, isMobile and -25 or -30)
-CreditsFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-CreditsFrame.BorderSizePixel = 0
-CreditsFrame.Parent = ContentFrame
-Instance.new("UICorner", CreditsFrame).CornerRadius = UDim.new(0, 6)
+local TypeTab = Instance.new("ScrollingFrame")
+TypeTab.Name = "TypeTab"
+TypeTab.Size = UDim2.new(1, -10, 1, -10)
+TypeTab.Position = UDim2.new(0, 5, 0, 5)
+TypeTab.BackgroundTransparency = 1
+TypeTab.ScrollBarThickness = 3
+TypeTab.ScrollBarImageColor3 = Color3.fromRGB(139, 0, 0)
+TypeTab.CanvasSize = UDim2.new(0, 0, 0, 0)
+TypeTab.Visible = true
+TypeTab.Parent = ContentArea
 
-local CreditsLabel = Instance.new("TextLabel")
-CreditsLabel.Size = UDim2.new(1, 0, 1, 0)
-CreditsLabel.BackgroundTransparency = 1
-CreditsLabel.Text = "Made by KIRA 🔥 | YT: @kira_0001 | DC: discord.gg/ZH48pK5wen"
-CreditsLabel.TextColor3 = Color3.fromRGB(100, 100, 100)
-CreditsLabel.Font = Enum.Font.Gotham
-CreditsLabel.TextSize = isMobile and 10 or 12  -- Scaled for visibility
-CreditsLabel.Parent = CreditsFrame
+local TypeLayout = Instance.new("UIListLayout")
+TypeLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TypeLayout.Padding = UDim.new(0, 6)
+TypeLayout.Parent = TypeTab
 
--- ═══════════════════════════════════════════════════════════════
--- 🎬 ANIMATIONS (Adjusted for mobile performance)
--- ═══════════════════════════════════════════════════════════════
+-- Toggles
+local TogglesTitle = Instance.new("TextLabel")
+TogglesTitle.Size = UDim2.new(1, 0, 0, isMobile and 18 or 22)
+TogglesTitle.BackgroundTransparency = 1
+TogglesTitle.Text = "🎛️ TOGGLES"
+TogglesTitle.TextColor3 = Color3.fromRGB(255, 200, 100)
+TogglesTitle.Font = Enum.Font.GothamBlack
+TogglesTitle.TextSize = isMobile and 11 or 13
+TogglesTitle.TextXAlignment = Enum.TextXAlignment.Left
+TogglesTitle.LayoutOrder = 1
+TogglesTitle.Parent = TypeTab
 
-local function AnimateMainIn()
-    MainFrame.BackgroundTransparency = 1
-    MainStroke.Transparency = 1
-    GlowFrame.ImageTransparency = 1
+local TogglesFrame = Instance.new("Frame")
+TogglesFrame.Size = UDim2.new(1, 0, 0, isMobile and 65 or 75)
+TogglesFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+TogglesFrame.BorderSizePixel = 0
+TogglesFrame.LayoutOrder = 2
+TogglesFrame.Parent = TypeTab
+Instance.new("UICorner", TogglesFrame).CornerRadius = UDim.new(0, 8)
+
+local ToggleData = {
+    {name = "AutoType", text = "⚡ AUTO", default = false},
+    {name = "Suggest", text = "💡 SUGGEST", default = true},
+    {name = "Real", text = "✓ REAL", default = true},
+    {name = "Hard", text = "💀 HARD", default = false},
+}
+
+local ToggleButtons = {}
+for i, data in ipairs(ToggleData) do
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(0.25, -4, 1, -8)
+    container.Position = UDim2.new((i-1) * 0.25, 2, 0, 4)
+    container.BackgroundTransparency = 1
+    container.Parent = TogglesFrame
     
-    TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        BackgroundTransparency = 0
-    }):Play()
-    TweenService:Create(MainStroke, TweenInfo.new(0.3), {Transparency = 0}):Play()
-    TweenService:Create(GlowFrame, TweenInfo.new(0.6), {ImageTransparency = 0.7}):Play()
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 0, isMobile and 14 or 18)
+    label.BackgroundTransparency = 1
+    label.Text = data.text
+    label.TextColor3 = Color3.fromRGB(180, 180, 180)
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = isMobile and 8 or 9
+    label.TextScaled = true
+    label.Parent = container
     
-    -- Simplified glow loop for mobile (less intensive)
-    task.spawn(function()
-        while ScreenGui and ScreenGui.Parent do
-            TweenService:Create(GlowFrame, TweenInfo.new(1.2, Enum.EasingStyle.Sine), {ImageTransparency = 0.85}):Play()
-            task.wait(1.2)
-            TweenService:Create(GlowFrame, TweenInfo.new(1.2, Enum.EasingStyle.Sine), {ImageTransparency = 0.6}):Play()
-            task.wait(1.2)
+    local btn = Instance.new("TextButton")
+    btn.Name = data.name
+    btn.Size = UDim2.new(1, 0, 0, isMobile and 28 or 34)
+    btn.Position = UDim2.new(0, 0, 0, isMobile and 18 or 22)
+    btn.BackgroundColor3 = data.default and Color3.fromRGB(0, 110, 0) or Color3.fromRGB(110, 0, 0)
+    btn.Text = data.default and "✅ ON" or "❌ OFF"
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = isMobile and 9 or 11
+    btn.Parent = container
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+    ToggleButtons[data.name] = btn
+end
+
+-- Speed
+local SpeedTitle = Instance.new("TextLabel")
+SpeedTitle.Size = UDim2.new(1, 0, 0, isMobile and 18 or 22)
+SpeedTitle.BackgroundTransparency = 1
+SpeedTitle.Text = "⌨️ TYPING SPEED"
+SpeedTitle.TextColor3 = Color3.fromRGB(100, 200, 255)
+SpeedTitle.Font = Enum.Font.GothamBlack
+SpeedTitle.TextSize = isMobile and 11 or 13
+SpeedTitle.TextXAlignment = Enum.TextXAlignment.Left
+SpeedTitle.LayoutOrder = 3
+SpeedTitle.Parent = TypeTab
+
+local SpeedFrame = Instance.new("Frame")
+SpeedFrame.Size = UDim2.new(1, 0, 0, isMobile and 32 or 38)
+SpeedFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+SpeedFrame.BorderSizePixel = 0
+SpeedFrame.LayoutOrder = 4
+SpeedFrame.Parent = TypeTab
+Instance.new("UICorner", SpeedFrame).CornerRadius = UDim.new(0, 8)
+
+local SpeedButtons = {}
+for i, speed in ipairs(TYPING_SPEEDS) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.2, -4, 1, -6)
+    btn.Position = UDim2.new((i-1) * 0.2, 2, 0, 3)
+    btn.BackgroundColor3 = (i == SelectedSpeedIndex) and Color3.fromRGB(139, 0, 0) or Color3.fromRGB(45, 45, 45)
+    btn.Text = speed.name
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = isMobile and 14 or 18
+    btn.Parent = SpeedFrame
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+    SpeedButtons[i] = btn
+end
+
+-- Delay
+local DelayTitle = Instance.new("TextLabel")
+DelayTitle.Size = UDim2.new(1, 0, 0, isMobile and 18 or 22)
+DelayTitle.BackgroundTransparency = 1
+DelayTitle.Text = "⏱️ THINKING DELAY"
+DelayTitle.TextColor3 = Color3.fromRGB(200, 150, 255)
+DelayTitle.Font = Enum.Font.GothamBlack
+DelayTitle.TextSize = isMobile and 11 or 13
+DelayTitle.TextXAlignment = Enum.TextXAlignment.Left
+DelayTitle.LayoutOrder = 5
+DelayTitle.Parent = TypeTab
+
+local DelayFrame = Instance.new("Frame")
+DelayFrame.Size = UDim2.new(1, 0, 0, isMobile and 32 or 38)
+DelayFrame.BackgroundColor3 = Color3.fromRGB(30, 25, 35)
+DelayFrame.BorderSizePixel = 0
+DelayFrame.LayoutOrder = 6
+DelayFrame.Parent = TypeTab
+Instance.new("UICorner", DelayFrame).CornerRadius = UDim.new(0, 8)
+
+local DelayButtons = {}
+for i, d in ipairs(THINKING_DELAYS) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.2, -4, 1, -6)
+    btn.Position = UDim2.new((i-1) * 0.2, 2, 0, 3)
+    btn.BackgroundColor3 = (i == SelectedDelayIndex) and Color3.fromRGB(100, 50, 150) or Color3.fromRGB(45, 45, 45)
+    btn.Text = d.name
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = isMobile and 10 or 12
+    btn.Parent = DelayFrame
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+    DelayButtons[i] = btn
+end
+
+-- Range
+local RangeTitle = Instance.new("TextLabel")
+RangeTitle.Size = UDim2.new(1, 0, 0, isMobile and 18 or 22)
+RangeTitle.BackgroundTransparency = 1
+RangeTitle.Text = "📏 WORD LENGTH"
+RangeTitle.TextColor3 = Color3.fromRGB(100, 255, 150)
+RangeTitle.Font = Enum.Font.GothamBlack
+RangeTitle.TextSize = isMobile and 11 or 13
+RangeTitle.TextXAlignment = Enum.TextXAlignment.Left
+RangeTitle.LayoutOrder = 7
+RangeTitle.Parent = TypeTab
+
+local RangeFrame = Instance.new("Frame")
+RangeFrame.Size = UDim2.new(1, 0, 0, isMobile and 32 or 38)
+RangeFrame.BackgroundColor3 = Color3.fromRGB(25, 30, 25)
+RangeFrame.BorderSizePixel = 0
+RangeFrame.LayoutOrder = 8
+RangeFrame.Parent = TypeTab
+Instance.new("UICorner", RangeFrame).CornerRadius = UDim.new(0, 8)
+
+local RangeButtons = {}
+for i, r in ipairs(WordRangeOptions) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.2, -4, 1, -6)
+    btn.Position = UDim2.new((i-1) * 0.2, 2, 0, 3)
+    btn.BackgroundColor3 = (i == SelectedRangeIndex) and Color3.fromRGB(0, 130, 80) or Color3.fromRGB(45, 45, 45)
+    btn.Text = r.name
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = isMobile and 10 or 12
+    btn.Parent = RangeFrame
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+    RangeButtons[i] = btn
+end
+
+TypeLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    TypeTab.CanvasSize = UDim2.new(0, 0, 0, TypeLayout.AbsoluteContentSize.Y + 10)
+end)
+
+-- ═══════════════════════════════════════════════════════════════
+-- 🎮 TAB 2: JOIN (LAST LETTER HALL ONLY)
+-- ═══════════════════════════════════════════════════════════════
+
+local JoinTab = Instance.new("ScrollingFrame")
+JoinTab.Name = "JoinTab"
+JoinTab.Size = UDim2.new(1, -10, 1, -10)
+JoinTab.Position = UDim2.new(0, 5, 0, 5)
+JoinTab.BackgroundTransparency = 1
+JoinTab.ScrollBarThickness = 3
+JoinTab.ScrollBarImageColor3 = Color3.fromRGB(139, 0, 0)
+JoinTab.CanvasSize = UDim2.new(0, 0, 0, 0)
+JoinTab.Visible = false
+JoinTab.Parent = ContentArea
+
+local JoinLayout = Instance.new("UIListLayout")
+JoinLayout.SortOrder = Enum.SortOrder.LayoutOrder
+JoinLayout.Padding = UDim.new(0, 6)
+JoinLayout.Parent = JoinTab
+
+local JoinTitle = Instance.new("TextLabel")
+JoinTitle.Size = UDim2.new(1, 0, 0, isMobile and 22 or 26)
+JoinTitle.BackgroundTransparency = 1
+JoinTitle.Text = "🎮 JOIN LAST LETTER"
+JoinTitle.TextColor3 = Color3.fromRGB(100, 150, 255)
+JoinTitle.Font = Enum.Font.GothamBlack
+JoinTitle.TextSize = isMobile and 12 or 14
+JoinTitle.TextXAlignment = Enum.TextXAlignment.Left
+JoinTitle.LayoutOrder = 1
+JoinTitle.Parent = JoinTab
+
+local JoinModes = {
+    {mode = "1v1", icon = "⚔️", color = Color3.fromRGB(0, 150, 100), tables = "Tables 1-4"},
+    {mode = "1v3", icon = "👥", color = Color3.fromRGB(0, 100, 200), tables = "Tables 5-8"},
+    {mode = "1v7", icon = "🎯", color = Color3.fromRGB(150, 50, 200), tables = "Table 9"}
+}
+
+local StatusLabels = {}
+local JoinButtons = {}
+
+for i, data in ipairs(JoinModes) do
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(1, 0, 0, isMobile and 55 or 65)
+    container.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    container.BorderSizePixel = 0
+    container.LayoutOrder = i + 1
+    container.Parent = JoinTab
+    Instance.new("UICorner", container).CornerRadius = UDim.new(0, 8)
+    
+    local status = Instance.new("TextLabel")
+    status.Name = "Status" .. data.mode
+    status.Size = UDim2.new(1, -10, 0, isMobile and 16 or 20)
+    status.Position = UDim2.new(0, 5, 0, 3)
+    status.BackgroundTransparency = 1
+    status.Text = data.icon .. " " .. data.mode .. " (" .. data.tables .. "): Scanning..."
+    status.TextColor3 = Color3.fromRGB(180, 180, 180)
+    status.Font = Enum.Font.GothamBold
+    status.TextSize = isMobile and 9 or 11
+    status.TextXAlignment = Enum.TextXAlignment.Left
+    status.Parent = container
+    StatusLabels[data.mode] = status
+    
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -10, 0, isMobile and 30 or 36)
+    btn.Position = UDim2.new(0, 5, 0, isMobile and 22 or 26)
+    btn.BackgroundColor3 = data.color
+    btn.Text = data.icon .. " JOIN " .. data.mode
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBlack
+    btn.TextSize = isMobile and 11 or 13
+    btn.Parent = container
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    JoinButtons[data.mode] = btn
+    
+    btn.MouseEnter:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.new(data.color.R * 1.3, data.color.G * 1.3, data.color.B * 1.3)}):Play()
+    end)
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = data.color}):Play()
+    end)
+    
+    btn.MouseButton1Click:Connect(function()
+        local success, msg = JoinGameMode(data.mode)
+        if success then
+            Notify("✅ Joined!", msg, 3)
+        else
+            Notify("❌ " .. data.mode .. " Full", msg, 3)
         end
     end)
 end
 
-local function AnimateMainOut(callback)
-    TweenService:Create(MainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-        BackgroundTransparency = 1
-    }):Play()
-    TweenService:Create(MainStroke, TweenInfo.new(0.2), {Transparency = 1}):Play()
-    TweenService:Create(GlowFrame, TweenInfo.new(0.2), {ImageTransparency = 1}):Play()
-    task.wait(0.35)
-    if callback then callback() end
-end
+local RetryContainer = Instance.new("Frame")
+RetryContainer.Size = UDim2.new(1, 0, 0, isMobile and 35 or 40)
+RetryContainer.BackgroundColor3 = Color3.fromRGB(35, 25, 40)
+RetryContainer.BorderSizePixel = 0
+RetryContainer.LayoutOrder = 10
+RetryContainer.Parent = JoinTab
+Instance.new("UICorner", RetryContainer).CornerRadius = UDim.new(0, 8)
 
-local function AnimateMinimize(min)
-    local newSize = min and UDim2.new(0, MainFrame.Size.X.Offset, 0, isMobile and 50 or 65) or MainFrame.Size  -- Adjust minimize size for mobile
-    if min then
-        TweenService:Create(ContentFrame, TweenInfo.new(0.1), {BackgroundTransparency = 1}):Play()
-        task.wait(0.1)
-        ContentFrame.Visible = false
-    end
-    TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = newSize}):Play()
-    if not min then
-        task.wait(0.15)
-        ContentFrame.Visible = true
-    end
-end
+local RetryLabel = Instance.new("TextLabel")
+RetryLabel.Size = UDim2.new(0.6, 0, 1, 0)
+RetryLabel.Position = UDim2.new(0, 8, 0, 0)
+RetryLabel.BackgroundTransparency = 1
+RetryLabel.Text = "🔄 Auto-Retry if Full"
+RetryLabel.TextColor3 = Color3.fromRGB(200, 180, 220)
+RetryLabel.Font = Enum.Font.GothamBold
+RetryLabel.TextSize = isMobile and 10 or 12
+RetryLabel.TextXAlignment = Enum.TextXAlignment.Left
+RetryLabel.Parent = RetryContainer
 
-local function FlashLetters()
-    TweenService:Create(LettersSection, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 100, 100)}):Play()
-    task.wait(0.15)
-    TweenService:Create(LettersSection, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(139, 0, 0)}):Play()
-end
+local RetryToggle = Instance.new("TextButton")
+RetryToggle.Size = UDim2.new(0, isMobile and 55 or 70, 0, isMobile and 24 or 28)
+RetryToggle.Position = UDim2.new(1, isMobile and -60 or -75, 0.5, isMobile and -12 or -14)
+RetryToggle.BackgroundColor3 = Color3.fromRGB(110, 0, 0)
+RetryToggle.Text = "❌ OFF"
+RetryToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+RetryToggle.Font = Enum.Font.GothamBold
+RetryToggle.TextSize = isMobile and 9 or 11
+RetryToggle.Parent = RetryContainer
+Instance.new("UICorner", RetryToggle).CornerRadius = UDim.new(0, 5)
 
-local function BtnClick(btn)
-    local orig = btn.Size
-    TweenService:Create(btn, TweenInfo.new(0.08), {
-        Size = UDim2.new(orig.X.Scale * 0.92, orig.X.Offset * 0.92, orig.Y.Scale * 0.92, orig.Y.Offset * 0.92)
-    }):Play()
-    task.wait(0.08)
-    TweenService:Create(btn, TweenInfo.new(0.08), {Size = orig}):Play()
-end
+JoinLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    JoinTab.CanvasSize = UDim2.new(0, 0, 0, JoinLayout.AbsoluteContentSize.Y + 10)
+end)
 
 -- ═══════════════════════════════════════════════════════════════
--- 📌 CORE LOGIC
+-- 📜 TAB 3: CREDITS (Renamed from Settings)
+-- ═══════════════════════════════════════════════════════════════
+
+-- ═══════════════════════════════════════════════════════════════
+-- 📜 TAB 3: CREDITS
+-- ═══════════════════════════════════════════════════════════════
+
+local CreditsTab = Instance.new("ScrollingFrame")
+CreditsTab.Name = "CreditsTab"
+CreditsTab.Size = UDim2.new(1, -10, 1, -10)
+CreditsTab.Position = UDim2.new(0, 5, 0, 5)
+CreditsTab.BackgroundTransparency = 1
+CreditsTab.ScrollBarThickness = 3
+CreditsTab.ScrollBarImageColor3 = Color3.fromRGB(139, 0, 0)
+CreditsTab.CanvasSize = UDim2.new(0, 0, 0, 0)
+CreditsTab.Visible = false
+CreditsTab.Parent = ContentArea
+
+local CreditsLayout = Instance.new("UIListLayout")
+CreditsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+CreditsLayout.Padding = UDim.new(0, 5)
+CreditsLayout.Parent = CreditsTab
+
+-- MADE BY KIRA Section (Smaller)
+local MadeByBox = Instance.new("Frame")
+MadeByBox.Size = UDim2.new(1, 0, 0, isMobile and 38 or 45)
+MadeByBox.BackgroundColor3 = Color3.fromRGB(30, 20, 25)
+MadeByBox.BorderSizePixel = 0
+MadeByBox.LayoutOrder = 1
+MadeByBox.Parent = CreditsTab
+Instance.new("UICorner", MadeByBox).CornerRadius = UDim.new(0, 8)
+
+local MadeByTitle = Instance.new("TextLabel")
+MadeByTitle.Size = UDim2.new(1, 0, 0, isMobile and 18 or 22)
+MadeByTitle.Position = UDim2.new(0, 0, 0, isMobile and 3 or 4)
+MadeByTitle.BackgroundTransparency = 1
+MadeByTitle.Text = "🔥 MADE BY KIRA 🔥"
+MadeByTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
+MadeByTitle.Font = Enum.Font.GothamBlack
+MadeByTitle.TextSize = isMobile and 11 or 13
+MadeByTitle.Parent = MadeByBox
+
+local DiscordUser = Instance.new("TextLabel")
+DiscordUser.Size = UDim2.new(1, 0, 0, isMobile and 14 or 16)
+DiscordUser.Position = UDim2.new(0, 0, 0, isMobile and 22 or 26)
+DiscordUser.BackgroundTransparency = 1
+DiscordUser.Text = "💬 Discord: heaven_nor_hell_"
+DiscordUser.TextColor3 = Color3.fromRGB(130, 160, 220)
+DiscordUser.Font = Enum.Font.GothamBold
+DiscordUser.TextSize = isMobile and 9 or 11
+DiscordUser.Parent = MadeByBox
+
+-- Updates Section
+local UpdatesTitle = Instance.new("TextLabel")
+UpdatesTitle.Size = UDim2.new(1, 0, 0, isMobile and 18 or 22)
+UpdatesTitle.BackgroundTransparency = 1
+UpdatesTitle.Text = "📋 UPDATES"
+UpdatesTitle.TextColor3 = Color3.fromRGB(255, 200, 100)
+UpdatesTitle.Font = Enum.Font.GothamBlack
+UpdatesTitle.TextSize = isMobile and 11 or 13
+UpdatesTitle.TextXAlignment = Enum.TextXAlignment.Left
+UpdatesTitle.LayoutOrder = 2
+UpdatesTitle.Parent = CreditsTab
+
+local UpdatesBox = Instance.new("Frame")
+UpdatesBox.Size = UDim2.new(1, 0, 0, isMobile and 85 or 100)
+UpdatesBox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+UpdatesBox.BorderSizePixel = 0
+UpdatesBox.LayoutOrder = 3
+UpdatesBox.Parent = CreditsTab
+Instance.new("UICorner", UpdatesBox).CornerRadius = UDim.new(0, 8)
+
+-- Version Header (Bold & Bigger)
+local VersionHeader = Instance.new("TextLabel")
+VersionHeader.Size = UDim2.new(1, -12, 0, isMobile and 16 or 20)
+VersionHeader.Position = UDim2.new(0, 6, 0, isMobile and 5 or 6)
+VersionHeader.BackgroundTransparency = 1
+VersionHeader.Text = "📅 v3.5 (Feb 2026)"
+VersionHeader.TextColor3 = Color3.fromRGB(255, 220, 100)
+VersionHeader.Font = Enum.Font.GothamBlack
+VersionHeader.TextSize = isMobile and 11 or 13
+VersionHeader.TextXAlignment = Enum.TextXAlignment.Left
+VersionHeader.Parent = UpdatesBox
+
+-- Update Details (Slightly smaller)
+local UpdateDetails = Instance.new("TextLabel")
+UpdateDetails.Size = UDim2.new(1, -12, 0, isMobile and 58 or 68)
+UpdateDetails.Position = UDim2.new(0, 6, 0, isMobile and 23 or 28)
+UpdateDetails.BackgroundTransparency = 1
+UpdateDetails.Text = "• Auto Join Tables\n• GUI Revamp\n• Added UPDATES section\n• Sidebar for suggestions\n• Mobile optimized layout"
+UpdateDetails.TextColor3 = Color3.fromRGB(180, 180, 180)
+UpdateDetails.Font = Enum.Font.Gotham
+UpdateDetails.TextSize = isMobile and 9 or 11
+UpdateDetails.TextXAlignment = Enum.TextXAlignment.Left
+UpdateDetails.TextYAlignment = Enum.TextYAlignment.Top
+UpdateDetails.Parent = UpdatesBox
+
+-- Links Section
+local LinksTitle = Instance.new("TextLabel")
+LinksTitle.Size = UDim2.new(1, 0, 0, isMobile and 16 or 20)
+LinksTitle.BackgroundTransparency = 1
+LinksTitle.Text = "🔗 LINKS"
+LinksTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+LinksTitle.Font = Enum.Font.GothamBlack
+LinksTitle.TextSize = isMobile and 10 or 12
+LinksTitle.TextXAlignment = Enum.TextXAlignment.Left
+LinksTitle.LayoutOrder = 4
+LinksTitle.Parent = CreditsTab
+
+local DiscordBtn = Instance.new("TextButton")
+DiscordBtn.Size = UDim2.new(1, 0, 0, isMobile and 32 or 38)
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+DiscordBtn.Text = "💬 COPY DISCORD SERVER"
+DiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordBtn.Font = Enum.Font.GothamBlack
+DiscordBtn.TextSize = isMobile and 10 or 12
+DiscordBtn.LayoutOrder = 5
+DiscordBtn.Parent = CreditsTab
+Instance.new("UICorner", DiscordBtn).CornerRadius = UDim.new(0, 8)
+
+local YouTubeBtn = Instance.new("TextButton")
+YouTubeBtn.Size = UDim2.new(1, 0, 0, isMobile and 32 or 38)
+YouTubeBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+YouTubeBtn.Text = "📺 COPY YOUTUBE"
+YouTubeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+YouTubeBtn.Font = Enum.Font.GothamBlack
+YouTubeBtn.TextSize = isMobile and 10 or 12
+YouTubeBtn.LayoutOrder = 6
+YouTubeBtn.Parent = CreditsTab
+Instance.new("UICorner", YouTubeBtn).CornerRadius = UDim.new(0, 8)
+
+CreditsLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    CreditsTab.CanvasSize = UDim2.new(0, 0, 0, CreditsLayout.AbsoluteContentSize.Y + 10)
+end)
+-- ═══════════════════════════════════════════════════════════════
+-- 🎬 CORE FUNCTIONS
 -- ═══════════════════════════════════════════════════════════════
 
 local function Notify(title, msg, dur)
@@ -1110,6 +1258,50 @@ local function Notify(title, msg, dur)
         StarterGui:SetCore("SendNotification", {Title = title or "🔥 KIRA", Text = msg, Duration = dur or 3})
     end)
 end
+
+local function AnimateMainIn()
+    MainFrame.BackgroundTransparency = 1
+    MainStroke.Transparency = 1
+    GlowFrame.ImageTransparency = 1
+    
+    TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(MainStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(GlowFrame, TweenInfo.new(0.5), {ImageTransparency = 0.75}):Play()
+    
+    task.spawn(function()
+        while ScreenGui and ScreenGui.Parent do
+            TweenService:Create(GlowFrame, TweenInfo.new(1), {ImageTransparency = 0.85}):Play()
+            task.wait(1)
+            TweenService:Create(GlowFrame, TweenInfo.new(1), {ImageTransparency = 0.65}):Play()
+            task.wait(1)
+        end
+    end)
+end
+
+local function FlashLetters()
+    TweenService:Create(LettersBox, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 100, 100)}):Play()
+    task.wait(0.12)
+    TweenService:Create(LettersBox, TweenInfo.new(0.25), {BackgroundColor3 = Color3.fromRGB(139, 0, 0)}):Play()
+end
+
+-- Tab Switching
+local function SwitchTab(tabName)
+    CurrentTab = tabName
+    TypeTab.Visible = (tabName == "TYPE")
+    JoinTab.Visible = (tabName == "JOIN")
+    CreditsTab.Visible = (tabName == "CREDITS")
+    
+    for name, btn in pairs(TabButtons) do
+        local isActive = (name == tabName)
+        TweenService:Create(btn, TweenInfo.new(0.15), {
+            BackgroundColor3 = isActive and Color3.fromRGB(139, 0, 0) or Color3.fromRGB(35, 35, 35)
+        }):Play()
+    end
+end
+
+TabButtons["TYPE"].MouseButton1Click:Connect(function() SwitchTab("TYPE") end)
+TabButtons["JOIN"].MouseButton1Click:Connect(function() SwitchTab("JOIN") end)
+TabButtons["CREDITS"].MouseButton1Click:Connect(function() SwitchTab("CREDITS") end)
 
 -- Draggable
 local dragging, dragInput, dragStart, startPos
@@ -1137,74 +1329,88 @@ end)
 
 -- Controls
 CloseButton.MouseButton1Click:Connect(function()
-    BtnClick(CloseButton)
-    AnimateMainOut(function() ScreenGui:Destroy() end)
+    TweenService:Create(MainFrame, TweenInfo.new(0.25), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(MainStroke, TweenInfo.new(0.15), {Transparency = 1}):Play()
+    task.wait(0.25)
+    ScreenGui:Destroy()
 end)
 
+local originalSize = MainFrame.Size
 MinimizeButton.MouseButton1Click:Connect(function()
-    BtnClick(MinimizeButton)
     IsMinimized = not IsMinimized
     MinimizeButton.Text = IsMinimized and "+" or "—"
-    AnimateMinimize(IsMinimized)
+    
+    if IsMinimized then
+        ContentArea.Visible = false
+        Sidebar.Visible = false
+        TabBar.Visible = false
+        TweenService:Create(MainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, MainFrame.Size.X.Offset, 0, isMobile and 40 or 48)}):Play()
+    else
+        TweenService:Create(MainFrame, TweenInfo.new(0.2), {Size = originalSize}):Play()
+        task.wait(0.15)
+        ContentArea.Visible = true
+        Sidebar.Visible = true
+        TabBar.Visible = true
+    end
 end)
 
--- Toggles
-local function UpdateToggle(btn, state)
+-- ═══════════════════════════════════════════════════════════════
+-- 🎛️ TOGGLE HANDLERS
+-- ═══════════════════════════════════════════════════════════════
+
+local function UpdateToggleBtn(btn, state)
     TweenService:Create(btn, TweenInfo.new(0.15), {
         BackgroundColor3 = state and Color3.fromRGB(0, 110, 0) or Color3.fromRGB(110, 0, 0)
     }):Play()
     btn.Text = state and "✅ ON" or "❌ OFF"
 end
 
-AutoTypeToggle.MouseButton1Click:Connect(function()
-    BtnClick(AutoTypeToggle)
+ToggleButtons["AutoType"].MouseButton1Click:Connect(function()
     AutoTypeEnabled = not AutoTypeEnabled
-    UpdateToggle(AutoTypeToggle, AutoTypeEnabled)
-    Notify("⚡ Auto-Type", AutoTypeEnabled and "ENABLED" or "DISABLED", 2)
+    UpdateToggleBtn(ToggleButtons["AutoType"], AutoTypeEnabled)
+    Notify("⚡ Auto-Type", AutoTypeEnabled and "ON" or "OFF", 2)
 end)
 
-AutoSuggestToggle.MouseButton1Click:Connect(function()
-    BtnClick(AutoSuggestToggle)
+ToggleButtons["Suggest"].MouseButton1Click:Connect(function()
     AutoSuggestEnabled = not AutoSuggestEnabled
-    UpdateToggle(AutoSuggestToggle, AutoSuggestEnabled)
-    Notify("💡 Auto-Suggest", AutoSuggestEnabled and "ENABLED" or "DISABLED", 2)
+    UpdateToggleBtn(ToggleButtons["Suggest"], AutoSuggestEnabled)
+    Notify("💡 Suggest", AutoSuggestEnabled and "ON" or "OFF", 2)
 end)
 
-MeaningfulToggle.MouseButton1Click:Connect(function()
-    BtnClick(MeaningfulToggle)
+ToggleButtons["Real"].MouseButton1Click:Connect(function()
     MeaningfulOnlyMode = not MeaningfulOnlyMode
-    UpdateToggle(MeaningfulToggle, MeaningfulOnlyMode)
-    Notify("✓ Real Words", MeaningfulOnlyMode and "ONLY REAL" or "ALL", 2)
+    UpdateToggleBtn(ToggleButtons["Real"], MeaningfulOnlyMode)
+    Notify("✓ Real Words", MeaningfulOnlyMode and "ON" or "OFF", 2)
 end)
 
-HardWordsToggle.MouseButton1Click:Connect(function()
-    BtnClick(HardWordsToggle)
+ToggleButtons["Hard"].MouseButton1Click:Connect(function()
     HardWordsMode = not HardWordsMode
-    UpdateToggle(HardWordsToggle, HardWordsMode)
-    Notify("💀 Hard Words", HardWordsMode and "X,Z,Q,J PRIORITY" or "NORMAL", 2)
+    UpdateToggleBtn(ToggleButtons["Hard"], HardWordsMode)
+    Notify("💀 Hard Mode", HardWordsMode and "ON" or "OFF", 2)
+end)
+
+RetryToggle.MouseButton1Click:Connect(function()
+    AutoRetryEnabled = not AutoRetryEnabled
+    UpdateToggleBtn(RetryToggle, AutoRetryEnabled)
+    Notify("🔄 Auto-Retry", AutoRetryEnabled and "ON" or "OFF", 2)
 end)
 
 -- Speed buttons
 local function UpdateSpeedButtons()
     for i, btn in ipairs(SpeedButtons) do
         local isHuman = TYPING_SPEEDS[i].isHuman
-        local selectedColor = isHuman and Color3.fromRGB(0, 150, 100) or Color3.fromRGB(139, 0, 0)
+        local selectedColor = isHuman and Color3.fromRGB(0, 130, 100) or Color3.fromRGB(139, 0, 0)
         TweenService:Create(btn, TweenInfo.new(0.15), {
-            BackgroundColor3 = (i == SelectedSpeedIndex) and selectedColor or Color3.fromRGB(40, 40, 40)
+            BackgroundColor3 = (i == SelectedSpeedIndex) and selectedColor or Color3.fromRGB(45, 45, 45)
         }):Play()
     end
 end
+
 for i, btn in ipairs(SpeedButtons) do
     btn.MouseButton1Click:Connect(function()
-        BtnClick(btn)
         SelectedSpeedIndex = i
         UpdateSpeedButtons()
-        local speed = TYPING_SPEEDS[i]
-        if speed.isHuman then
-            Notify("🧠 REAL HUMAN", "Makes typos & corrects them!", 3)
-        else
-            Notify("⌨️ Speed", speed.name, 2)
-        end
+        Notify("⌨️ Speed", TYPING_SPEEDS[i].fullName, 2)
     end)
 end
 
@@ -1212,16 +1418,16 @@ end
 local function UpdateDelayButtons()
     for i, btn in ipairs(DelayButtons) do
         TweenService:Create(btn, TweenInfo.new(0.15), {
-            BackgroundColor3 = (i == SelectedDelayIndex) and Color3.fromRGB(100, 50, 150) or Color3.fromRGB(40, 40, 40)
+            BackgroundColor3 = (i == SelectedDelayIndex) and Color3.fromRGB(100, 50, 150) or Color3.fromRGB(45, 45, 45)
         }):Play()
     end
 end
+
 for i, btn in ipairs(DelayButtons) do
     btn.MouseButton1Click:Connect(function()
-        BtnClick(btn)
         SelectedDelayIndex = i
         UpdateDelayButtons()
-        Notify("⏱️ Thinking Delay", THINKING_DELAYS[i].name .. " before typing", 2)
+        Notify("⏱️ Delay", THINKING_DELAYS[i].name, 2)
     end)
 end
 
@@ -1229,74 +1435,46 @@ end
 local function UpdateRangeButtons()
     for i, btn in ipairs(RangeButtons) do
         TweenService:Create(btn, TweenInfo.new(0.15), {
-            BackgroundColor3 = (i == SelectedRangeIndex) and Color3.fromRGB(139, 0, 0) or Color3.fromRGB(40, 40, 40)
+            BackgroundColor3 = (i == SelectedRangeIndex) and Color3.fromRGB(0, 130, 80) or Color3.fromRGB(45, 45, 45)
         }):Play()
     end
 end
+
 for i, btn in ipairs(RangeButtons) do
     btn.MouseButton1Click:Connect(function()
-        BtnClick(btn)
         SelectedRangeIndex = i
         UpdateRangeButtons()
         Notify("📏 Range", WordRangeOptions[i].name, 2)
     end)
 end
 
--- Suggestion range buttons
-local function UpdateSuggestRangeButtons()
-    for i, btn in ipairs(SuggestRangeButtons) do
-        TweenService:Create(btn, TweenInfo.new(0.15), {
-            BackgroundColor3 = (i == SelectedSuggestionRange) and Color3.fromRGB(0, 100, 150) or Color3.fromRGB(45, 45, 45)
-        }):Play()
-    end
-end
-for i, btn in ipairs(SuggestRangeButtons) do
-    btn.MouseButton1Click:Connect(function()
-        BtnClick(btn)
-        SelectedSuggestionRange = i
-        UpdateSuggestRangeButtons()
-        if currentLetters ~= "" then UpdateSuggestions(currentLetters) end
-    end)
-end
+-- Credits buttons
+DiscordBtn.MouseButton1Click:Connect(function()
+    pcall(function() setclipboard(DISCORD_LINK) end)
+    Notify("📋 Copied!", "Discord link copied!", 3)
+end)
+
+YouTubeBtn.MouseButton1Click:Connect(function()
+    pcall(function() setclipboard(YOUTUBE_LINK) end)
+    Notify("📋 Copied!", "YouTube link copied!", 3)
+end)
 
 -- ═══════════════════════════════════════════════════════════════
--- 🧠 REAL HUMAN TYPING (Makes mistakes & corrects!)
+-- 🧠 TYPING SYSTEM
 -- ═══════════════════════════════════════════════════════════════
 
 local function GetNearbyKey(char)
     local keyboard = {
-        q = {"w", "a", "s"},
-        w = {"q", "e", "a", "s", "d"},
-        e = {"w", "r", "s", "d", "f"},
-        r = {"e", "t", "d", "f", "g"},
-        t = {"r", "y", "f", "g", "h"},
-        y = {"t", "u", "g", "h", "j"},
-        u = {"y", "i", "h", "j", "k"},
-        i = {"u", "o", "j", "k", "l"},
-        o = {"i", "p", "k", "l"},
-        p = {"o", "l"},
-        a = {"q", "w", "s", "z", "x"},
-        s = {"q", "w", "e", "a", "d", "z", "x", "c"},
-        d = {"w", "e", "r", "s", "f", "x", "c", "v"},
-        f = {"e", "r", "t", "d", "g", "c", "v", "b"},
-        g = {"r", "t", "y", "f", "h", "v", "b", "n"},
-        h = {"t", "y", "u", "g", "j", "b", "n", "m"},
-        j = {"y", "u", "i", "h", "k", "n", "m"},
-        k = {"u", "i", "o", "j", "l", "m"},
-        l = {"i", "o", "p", "k"},
-        z = {"a", "s", "x"},
-        x = {"z", "a", "s", "d", "c"},
-        c = {"x", "s", "d", "f", "v"},
-        v = {"c", "d", "f", "g", "b"},
-        b = {"v", "f", "g", "h", "n"},
-        n = {"b", "g", "h", "j", "m"},
-        m = {"n", "h", "j", "k"},
+        q={"w","a","s"},w={"q","e","a","s","d"},e={"w","r","s","d","f"},r={"e","t","d","f","g"},
+        t={"r","y","f","g","h"},y={"t","u","g","h","j"},u={"y","i","h","j","k"},i={"u","o","j","k","l"},
+        o={"i","p","k","l"},p={"o","l"},a={"q","w","s","z","x"},s={"q","w","e","a","d","z","x","c"},
+        d={"w","e","r","s","f","x","c","v"},f={"e","r","t","d","g","c","v","b"},g={"r","t","y","f","h","v","b","n"},
+        h={"t","y","u","g","j","b","n","m"},j={"y","u","i","h","k","n","m"},k={"u","i","o","j","l","m"},
+        l={"i","o","p","k"},z={"a","s","x"},x={"z","a","s","d","c"},c={"x","s","d","f","v"},
+        v={"c","d","f","g","b"},b={"v","f","g","h","n"},n={"b","g","h","j","m"},m={"n","h","j","k"},
     }
-    
     local nearby = keyboard[char:lower()]
-    if nearby and #nearby > 0 then
-        return nearby[math.random(1, #nearby)]
-    end
+    if nearby and #nearby > 0 then return nearby[math.random(1, #nearby)] end
     return char
 end
 
@@ -1306,10 +1484,9 @@ local function AutoTypeWord(word, input)
     local thinkDelay = THINKING_DELAYS[SelectedDelayIndex].delay
     
     task.spawn(function()
-        -- THINKING DELAY with anti-ban randomization
         if thinkDelay > 0 then
-            LettersSubtext.Text = "🤔 Thinking... (" .. thinkDelay .. "s)"
-            task.wait(thinkDelay + math.random() * 0.2)  -- Random variance for human simulation
+            LettersSubtext.Text = "🤔 " .. thinkDelay .. "s..."
+            task.wait(thinkDelay + math.random() * 0.2)
         end
         
         LettersSubtext.Text = "⌨️ Typing..."
@@ -1318,81 +1495,50 @@ local function AutoTypeWord(word, input)
         local size = cam.ViewportSize
         local x, y = size.X / 2, size.Y / 2
 
-        -- Click to focus with extra random clicks for anti-ban
-        for _ = 1, math.random(3, 5) do  -- Random number of clicks
+        for _ = 1, math.random(2, 4) do
             VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
-            task.wait(math.random(2, 5) / 100)  -- Randomized delay
+            task.wait(math.random(2, 4) / 100)
             VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
-            task.wait(math.random(2, 5) / 100)
+            task.wait(math.random(2, 4) / 100)
         end
 
-        local typedChars = {}
-        local i = 1
-        
-        while i <= #remaining do
+        for i = 1, #remaining do
             local char = remaining:sub(i, i):upper()
             local kc = Enum.KeyCode[char]
             
-            -- REAL HUMAN MODE - Make mistakes!
-            if speed.isHuman and math.random(1, 100) <= 15 then -- 15% chance of typo
-                -- Type wrong character
+            if speed.isHuman and math.random(1, 100) <= 15 then
                 local wrongChar = GetNearbyKey(char):upper()
                 local wrongKc = Enum.KeyCode[wrongChar]
-                
                 if wrongKc then
-                    -- Type the wrong key
                     VirtualInputManager:SendKeyEvent(true, wrongKc, false, game)
                     task.wait(math.random(speed.randomMin, speed.randomMax) / 100)
                     VirtualInputManager:SendKeyEvent(false, wrongKc, false, game)
-                    table.insert(typedChars, wrongChar)
-                    
-                    -- Pause (realize mistake) with random variance
-                    task.wait(math.random(15, 35) / 100 + math.random() * 0.1)
-                    
-                    -- Delete the mistake
+                    task.wait(math.random(15, 30) / 100)
                     VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
-                    task.wait(0.05 + math.random() * 0.02)
+                    task.wait(0.04)
                     VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Backspace, false, game)
-                    table.remove(typedChars)
-                    
-                    -- Small pause after correction with variance
-                    task.wait(math.random(8, 15) / 100 + math.random() * 0.05)
+                    task.wait(math.random(8, 12) / 100)
                 end
             end
             
-            -- Type correct character
             if kc then
                 VirtualInputManager:SendKeyEvent(true, kc, false, game)
-                task.wait(math.random(speed.randomMin, speed.randomMax) / 100 + math.random() * 0.01)  -- Extra random for anti-ban
+                task.wait(math.random(speed.randomMin, speed.randomMax) / 100)
                 VirtualInputManager:SendKeyEvent(false, kc, false, game)
-                table.insert(typedChars, char)
             end
-            
-            i = i + 1
         end
 
-        -- Small pause before enter (human hesitation) with random
-        if speed.isHuman then
-            task.wait(math.random(10, 25) / 100 + math.random() * 0.05)
-        else
-            task.wait(0.03 + math.random() * 0.01)
-        end
-        
-        -- Press Enter
+        task.wait(speed.isHuman and math.random(10, 20) / 100 or 0.03)
         VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
         VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
         
         usedWords[word] = true
-        table.insert(myWordsHistory, 1, word)
-        LettersSubtext.Text = "✅ Typed: " .. word:upper()
+        LettersSubtext.Text = "✅ " .. word:upper()
     end)
 end
 
--- Find word
 local function FindBestWord(input, minLen, maxLen)
-    local candidates = {}
-    local hardCandidates = {}
-    
+    local candidates, hardCandidates = {}, {}
     for _, word in ipairs(verifiedWords) do
         if word:sub(1, #input) == input and not usedWords[word] then
             local len = #word
@@ -1408,20 +1554,14 @@ local function FindBestWord(input, minLen, maxLen)
             end
         end
     end
-    
     table.sort(hardCandidates, function(a, b) return #a < #b end)
     table.sort(candidates, function(a, b) return #a < #b end)
-    
-    if HardWordsMode and #hardCandidates > 0 then
-        return hardCandidates[1], true
-    end
+    if HardWordsMode and #hardCandidates > 0 then return hardCandidates[1], true end
     return candidates[1], false
 end
 
 local function FindAnyWord(input)
-    local candidates = {}
-    local hardCandidates = {}
-    
+    local candidates, hardCandidates = {}, {}
     for _, word in ipairs(verifiedWords) do
         if word:sub(1, #input) == input and not usedWords[word] then
             local valid = not MeaningfulOnlyMode or IsValidMeaningfulWord(word)
@@ -1434,140 +1574,97 @@ local function FindAnyWord(input)
             end
         end
     end
-    
     table.sort(hardCandidates, function(a, b) return #a < #b end)
     table.sort(candidates, function(a, b) return #a < #b end)
-    
-    if HardWordsMode and #hardCandidates > 0 then
-        return hardCandidates[1], true
-    end
+    if HardWordsMode and #hardCandidates > 0 then return hardCandidates[1], true end
     return candidates[1], false
 end
 
--- Word button (Scaled for mobile)
+-- ═══════════════════════════════════════════════════════════════
+-- 📝 SUGGESTIONS
+-- ═══════════════════════════════════════════════════════════════
+
 local function CreateWordButton(word, index, isHard)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, -10, 0, isMobile and 22 or 26)
-    btn.BackgroundColor3 = isHard and Color3.fromRGB(50, 20, 50) or Color3.fromRGB(28, 28, 28)
+    btn.Size = UDim2.new(1, 0, 0, isMobile and 24 or 28)
+    btn.BackgroundColor3 = isHard and Color3.fromRGB(45, 25, 50) or Color3.fromRGB(32, 32, 32)
     btn.Text = ""
     btn.LayoutOrder = index
     btn.Parent = SuggestionsList
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
 
-    local stroke = Instance.new("UIStroke")
-    stroke.Color = isHard and Color3.fromRGB(150, 50, 150) or Color3.fromRGB(50, 50, 50)
-    stroke.Thickness = 1
-    stroke.Parent = btn
-
-    local idxLbl = Instance.new("TextLabel")
-    idxLbl.Size = UDim2.new(0, isMobile and 16 or 20, 1, 0)
-    idxLbl.Position = UDim2.new(0, 5, 0, 0)
-    idxLbl.BackgroundTransparency = 1
-    idxLbl.Text = "#" .. index
-    idxLbl.TextColor3 = Color3.fromRGB(139, 0, 0)
-    idxLbl.Font = Enum.Font.GothamBold
-    idxLbl.TextSize = isMobile and 8 or 9
-    idxLbl.TextXAlignment = Enum.TextXAlignment.Left
-    idxLbl.Parent = btn
-
     local wordLbl = Instance.new("TextLabel")
-    wordLbl.Size = UDim2.new(0.5, 0, 1, 0)
-    wordLbl.Position = UDim2.new(0, isMobile and 24 or 28, 0, 0)
+    wordLbl.Size = UDim2.new(0.7, 0, 1, 0)
+    wordLbl.Position = UDim2.new(0, 6, 0, 0)
     wordLbl.BackgroundTransparency = 1
-    wordLbl.Text = word:upper()
-    wordLbl.TextColor3 = isHard and Color3.fromRGB(255, 150, 255) or Color3.fromRGB(0, 255, 150)
-    wordLbl.Font = Enum.Font.GothamBlack
-    wordLbl.TextSize = isMobile and 10 or 11
+    wordLbl.Text = (isHard and "💀 " or "") .. word:upper()
+    wordLbl.TextColor3 = isHard and Color3.fromRGB(255, 150, 255) or Color3.fromRGB(0, 255, 130)
+    wordLbl.Font = Enum.Font.GothamBold
+    wordLbl.TextSize = isMobile and 10 or 12
     wordLbl.TextXAlignment = Enum.TextXAlignment.Left
+    wordLbl.TextTruncate = Enum.TextTruncate.AtEnd
     wordLbl.Parent = btn
 
-    if isHard then
-        local badge = Instance.new("TextLabel")
-        badge.Size = UDim2.new(0, isMobile and 14 or 16, 0, isMobile and 10 or 12)
-        badge.Position = UDim2.new(0.55, 0, 0.5, isMobile and -5 or -6)
-        badge.BackgroundColor3 = Color3.fromRGB(150, 50, 150)
-        badge.Text = "💀"
-        badge.TextSize = isMobile and 7 or 8
-        badge.Parent = btn
-        Instance.new("UICorner", badge).CornerRadius = UDim.new(0, 3)
-    end
-
     local lenLbl = Instance.new("TextLabel")
-    lenLbl.Size = UDim2.new(0, isMobile and 26 or 30, 0, isMobile and 12 or 14)
-    lenLbl.Position = UDim2.new(1, isMobile and -35 or -40, 0.5, isMobile and -6 or -7)
+    lenLbl.Size = UDim2.new(0, isMobile and 22 or 28, 0, isMobile and 14 or 18)
+    lenLbl.Position = UDim2.new(1, isMobile and -26 or -32, 0.5, isMobile and -7 or -9)
     lenLbl.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    lenLbl.Text = #word .. "c"
+    lenLbl.Text = tostring(#word)
     lenLbl.TextColor3 = Color3.fromRGB(180, 180, 180)
     lenLbl.Font = Enum.Font.GothamBold
-    lenLbl.TextSize = isMobile and 8 or 9
+    lenLbl.TextSize = isMobile and 9 or 11
     lenLbl.Parent = btn
-    Instance.new("UICorner", lenLbl).CornerRadius = UDim.new(0, 3)
+    Instance.new("UICorner", lenLbl).CornerRadius = UDim.new(0, 4)
 
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(139, 0, 0)}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(139, 0, 0)}):Play()
     end)
     btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.12), {
-            BackgroundColor3 = isHard and Color3.fromRGB(50, 20, 50) or Color3.fromRGB(28, 28, 28)
-        }):Play()
+        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundColor3 = isHard and Color3.fromRGB(45, 25, 50) or Color3.fromRGB(32, 32, 32)}):Play()
     end)
 
     btn.MouseButton1Click:Connect(function()
-        BtnClick(btn)
-        local prefix = isHard and "💀 " or "✅ "
-        Notify(prefix .. word:upper(), #word .. " chars", 2)
+        Notify((isHard and "💀 " or "✅ ") .. word:upper(), #word .. " chars", 2)
         AutoTypeWord(word, currentLetters)
     end)
 end
 
--- Display page
 local function DisplayPage()
     for _, c in ipairs(SuggestionsList:GetChildren()) do
         if c:IsA("TextButton") then c:Destroy() end
     end
 
-    local filtered = {}
-    local sr = SuggestionRangeOptions[SelectedSuggestionRange]
-    for _, word in ipairs(topWords) do
-        if #word >= sr.min and #word <= sr.max then
-            table.insert(filtered, word)
-        end
-    end
-
-    local totalPages = math.max(1, math.ceil(#filtered / CONFIG.wordsPerPage))
+    local totalPages = math.max(1, math.ceil(#topWords / CONFIG.wordsPerPage))
     currentPage = math.clamp(currentPage, 1, totalPages)
 
     local startIdx = (currentPage - 1) * CONFIG.wordsPerPage + 1
-    local endIdx = math.min(currentPage * CONFIG.wordsPerPage, #filtered)
+    local endIdx = math.min(currentPage * CONFIG.wordsPerPage, #topWords)
 
     for i = startIdx, endIdx do
-        if filtered[i] then
-            CreateWordButton(filtered[i], i - startIdx + 1, EndsWithHardLetter(filtered[i]))
+        if topWords[i] then
+            CreateWordButton(topWords[i], i - startIdx + 1, EndsWithHardLetter(topWords[i]))
         end
     end
 
-    PageLabel.Text = "Page " .. currentPage .. "/" .. totalPages
-    MatchCountLabel.Text = #filtered .. " found"
-    SuggestionsList.CanvasSize = UDim2.new(0, 0, 0, SuggestionsLayout.AbsoluteContentSize.Y + 10)
+    PageLabel.Text = currentPage .. "/" .. totalPages
+    MatchCountLabel.Text = tostring(#topWords)
+    SuggestionsList.CanvasSize = UDim2.new(0, 0, 0, SuggestionsLayout.AbsoluteContentSize.Y + 5)
 end
 
--- Update suggestions
 function UpdateSuggestions(input)
     topWords = {}
     input = input:lower():gsub("%s", "")
     currentLetters = input
 
     if input == "" then
-        LettersSubtext.Text = "⏳ Waiting for letters..."
+        LettersSubtext.Text = "⏳ Waiting..."
         DisplayPage()
         return
     end
     
-    LettersSubtext.Text = "🔍 Found suggestions below!"
+    LettersSubtext.Text = "🔍 Found!"
 
-    local hardWords = {}
-    local normalWords = {}
-
+    local hardWords, normalWords = {}, {}
     for _, word in ipairs(verifiedWords) do
         if word:sub(1, #input) == input and word ~= input and not usedWords[word] then
             local valid = not MeaningfulOnlyMode or IsValidMeaningfulWord(word)
@@ -1590,29 +1687,23 @@ function UpdateSuggestions(input)
     else
         for _, w in ipairs(normalWords) do table.insert(topWords, w) end
         for _, w in ipairs(hardWords) do table.insert(topWords, w) end
-        table.sort(topWords, function(a, b) return #a < #b end)
     end
 
     currentPage = 1
     DisplayPage()
 end
 
--- Pagination
 PrevButton.MouseButton1Click:Connect(function()
-    BtnClick(PrevButton)
     if currentPage > 1 then currentPage = currentPage - 1; DisplayPage() end
 end)
+
 NextButton.MouseButton1Click:Connect(function()
-    BtnClick(NextButton)
-    local sr = SuggestionRangeOptions[SelectedSuggestionRange]
-    local cnt = 0
-    for _, w in ipairs(topWords) do if #w >= sr.min and #w <= sr.max then cnt = cnt + 1 end end
-    local tp = math.max(1, math.ceil(cnt / CONFIG.wordsPerPage))
+    local tp = math.max(1, math.ceil(#topWords / CONFIG.wordsPerPage))
     if currentPage < tp then currentPage = currentPage + 1; DisplayPage() end
 end)
 
 -- ═══════════════════════════════════════════════════════════════
--- 📚 DICTIONARY
+-- 📚 DICTIONARY & GAME DETECTION
 -- ═══════════════════════════════════════════════════════════════
 
 local function LoadDictionary()
@@ -1647,9 +1738,24 @@ local function LoadDictionary()
     Notify("✅ Loaded", #verifiedWords .. " words!", 3)
 end
 
--- ═══════════════════════════════════════════════════════════════
--- 🎮 GAME DETECTION
--- ═══════════════════════════════════════════════════════════════
+-- Update table status
+local function UpdateTableStatus()
+    task.spawn(function()
+        while ScreenGui and ScreenGui.Parent do
+            for _, data in ipairs(JoinModes) do
+                local mode = data.mode
+                local avail = GetAvailableTables(mode)
+                local total = #TABLE_CONFIG[mode]
+                local label = StatusLabels[mode]
+                if label then
+                    label.Text = data.icon .. " " .. mode .. " (" .. data.tables .. "): " .. #avail .. "/" .. total .. " free"
+                    label.TextColor3 = #avail > 0 and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(255, 80, 80)
+                end
+            end
+            task.wait(2)
+        end
+    end)
+end
 
 local function ExtractLetters(msg)
     return msg:match("Word:%s*([A-Z][A-Z]?[A-Z]?[A-Z]?)")
@@ -1673,16 +1779,13 @@ LogService.MessageOut:Connect(function(message, _)
                 
                 if not best then
                     best, isHard = FindAnyWord(letters:lower())
-                    if best then Notify("⚠️ Fallback", best:upper(), 2) end
                 end
 
                 if best then
-                    local speed = TYPING_SPEEDS[SelectedSpeedIndex]
-                    local prefix = isHard and "💀 " or (speed.isHuman and "🧠 " or "⚡ ")
-                    Notify(prefix .. best:upper(), #best .. " chars", 2)
+                    Notify((isHard and "💀 " or "⚡ ") .. best:upper(), #best .. " chars", 2)
                     AutoTypeWord(best, letters:lower())
                 else
-                    Notify("❌ No Word", "Not found!", 2)
+                    Notify("❌ No Match", "No word found for '" .. letters .. "'!", 3)
                 end
             end
         end
@@ -1698,10 +1801,9 @@ pcall(function()
             Frame:GetPropertyChangedSignal("Visible"):Connect(function()
                 if not Frame.Visible then
                     usedWords = {}
-                    myWordsHistory = {}
                     currentLetters = ""
                     CurrentLettersLabel.Text = "---"
-                    LettersSubtext.Text = "⏳ Waiting for letters..."
+                    LettersSubtext.Text = "⏳ Waiting..."
                     topWords = {}
                     DisplayPage()
                     Notify("🔄 Reset", "New round!", 2)
@@ -1716,30 +1818,14 @@ end)
 -- ═══════════════════════════════════════════════════════════════
 
 task.spawn(LoadDictionary)
+task.spawn(UpdateTableStatus)
 AnimateMainIn()
 UpdateSpeedButtons()
 UpdateDelayButtons()
 UpdateRangeButtons()
-UpdateSuggestRangeButtons()
 
-task.wait(0.8)
-Notify("🔥 KIRA [Last Letter] v3.2", "FINAL EDITION Loaded!", 5)
-
-task.wait(2)
-Notify("Made by KIRA 🔥", "YT: @kira_0001 | DC: discord.gg/ZH48pK5wen", 8)
-
--- Commented original prints for cleanliness (preserved but not executed)
---[[
-print("═══════════════════════════════════════════════════")
-print("🔥 KIRA HUB [Last Letter] v3.2 — ABSOLUTE FINAL")
-print("═══════════════════════════════════════════════════")
-print("🧠 NEW: REAL HUMAN mode (makes typos & corrects!)")
-print("⏱️ NEW: Thinking Delay (0s, 0.5s, 1s, 2s, 5s)")
-print("═══════════════════════════════════════════════════")
-print("📺 YouTube: @kira_0001")
-print("💬 Discord: discord.gg/ZH48pK5wen")
-print("═══════════════════════════════════════════════════")
---]]
+task.wait(0.6)
+Notify("🔥 KIRA HUB v3.5", "Last Letter Hall Only!", 4)
 
 end -- End LoadMainScript
 
@@ -1749,12 +1835,11 @@ end -- End LoadMainScript
 
 StarterGui:SetCore("SendNotification", {
     Title = "🔥 KIRA HUB",
-    Text = "Loading Last Letter v3.2...",
-    Duration = 5
+    Text = "Loading v3.5...",
+    Duration = 4
 })
 
--- Force key system prompt (for testing/fixing skip issue; remove after)
-SavedKey = nil  -- Override to nil to always show key GUI
+SavedKey = nil
 
 if SavedKey and SavedKey == VALID_KEY then
     KeyVerified = true
