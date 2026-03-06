@@ -1,7 +1,7 @@
--- 🔥 KIRA HUB — ANNOUNCEMENT SCREEN 🔥
+-- 🔥 KIRA HUB — CINEMATIC ANNOUNCEMENT SCREEN 🔥
 -- Made by KIRA
 -- Discord: heaven_nor_hell_
--- Ultra Animated Edition
+-- Version: 3.6.5 | Professional Edition
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
@@ -18,40 +18,83 @@ local Lighting = game:GetService("Lighting")
 
 local player = Players.LocalPlayer
 
--- Config
+-- Configuration
 local Config = {
     BACKGROUND_IMAGE = "rbxassetid://86632807240550",
     LOGO_IMAGE = "rbxassetid://132347516821162",
     DISCORD = "https://discord.gg/ZH48pK5wen",
-    ANNOUNCEMENT_TEXT = "NEW LOADSTRING UPDATE IN MY DISCORD SERVER",
-    SUB_TEXT = "Join now to get the latest scripts & features!",
-    VERSION = "v3.8"
+    SCRIPT_LINK = "https://rscripts.net/script/kira-hub-v32-final-edition-HyO6",
+    VERSION = "3.6.5",
+    
+    FEATURES = {
+        {title = "Auto-Type System", desc = "Lightning-fast word detection"},
+        {title = "Smart Detection", desc = "Intelligent letter recognition"},
+        {title = "Manual Search", desc = "Priority-based search mode"},
+        {title = "Performance", desc = "Zero lag optimizations"},
+    },
+    
+    CHANGELOG = {
+        "Eliminated lag spikes completely",
+        "Manual search takes priority",
+        "Added clear button for search",
+        "Enhanced visual indicators",
+    },
 }
 
--- Colors
+-- Professional Color Palette
 local Colors = {
-    Primary = Color3.fromRGB(139, 0, 0),
-    Accent = Color3.fromRGB(255, 100, 0),
-    Gold = Color3.fromRGB(255, 215, 0),
-    White = Color3.fromRGB(255, 255, 255),
-    Dark = Color3.fromRGB(10, 5, 5),
-    Success = Color3.fromRGB(0, 255, 100),
-    Glow1 = Color3.fromRGB(255, 50, 50),
-    Glow2 = Color3.fromRGB(255, 150, 0),
+    Background = Color3.fromRGB(5, 5, 10),
+    Surface = Color3.fromRGB(15, 15, 22),
+    SurfaceLight = Color3.fromRGB(25, 25, 35),
+    SurfaceHover = Color3.fromRGB(35, 35, 48),
+    
+    Primary = Color3.fromRGB(180, 30, 30),
+    PrimaryDark = Color3.fromRGB(120, 20, 20),
+    PrimaryGlow = Color3.fromRGB(255, 60, 60),
+    
+    Accent = Color3.fromRGB(255, 140, 50),
+    AccentGold = Color3.fromRGB(255, 200, 80),
+    
+    Discord = Color3.fromRGB(88, 101, 242),
+    DiscordHover = Color3.fromRGB(110, 125, 255),
+    
+    Script = Color3.fromRGB(50, 180, 120),
+    ScriptHover = Color3.fromRGB(70, 210, 140),
+    
+    Success = Color3.fromRGB(80, 200, 120),
+    
+    Text = Color3.fromRGB(255, 255, 255),
+    TextSecondary = Color3.fromRGB(180, 180, 195),
+    TextMuted = Color3.fromRGB(120, 120, 140),
+    TextDim = Color3.fromRGB(80, 80, 100),
+    
+    Border = Color3.fromRGB(60, 60, 80),
+    BorderLight = Color3.fromRGB(80, 80, 100),
 }
 
--- Cleanup old
+-- Cleanup
 pcall(function()
     if CoreGui:FindFirstChild("KiraAnnouncement") then
         CoreGui.KiraAnnouncement:Destroy()
     end
+    if Lighting:FindFirstChild("KiraAnnouncementBlur") then
+        Lighting.KiraAnnouncementBlur:Destroy()
+    end
 end)
 
--- Add blur effect
+-- Effects
 local BlurEffect = Instance.new("BlurEffect")
 BlurEffect.Name = "KiraAnnouncementBlur"
 BlurEffect.Size = 0
 BlurEffect.Parent = Lighting
+
+local ColorCorrection = Instance.new("ColorCorrectionEffect")
+ColorCorrection.Name = "KiraCC"
+ColorCorrection.Brightness = 0
+ColorCorrection.Contrast = 0
+ColorCorrection.Saturation = 0
+ColorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
+ColorCorrection.Parent = Lighting
 
 -- Main GUI
 local ScreenGui = Instance.new("ScreenGui")
@@ -62,844 +105,1241 @@ ScreenGui.IgnoreGuiInset = true
 ScreenGui.Parent = CoreGui
 
 -- ═══════════════════════════════════════════════════════════════
--- 🎨 BACKGROUND LAYER
+-- 🎨 UTILITY FUNCTIONS
 -- ═══════════════════════════════════════════════════════════════
 
-local BackgroundFrame = Instance.new("Frame")
-BackgroundFrame.Size = UDim2.new(1, 0, 1, 0)
-BackgroundFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-BackgroundFrame.BackgroundTransparency = 1
-BackgroundFrame.Parent = ScreenGui
+local function CreateCorner(parent, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius or 8)
+    corner.Parent = parent
+    return corner
+end
+
+local function CreateStroke(parent, color, thickness, transparency)
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = color or Colors.Border
+    stroke.Thickness = thickness or 1
+    stroke.Transparency = transparency or 0
+    stroke.Parent = parent
+    return stroke
+end
+
+local function CreateGradient(parent, colors, rotation)
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = colors
+    gradient.Rotation = rotation or 90
+    gradient.Parent = parent
+    return gradient
+end
+
+-- ═══════════════════════════════════════════════════════════════
+-- 🎬 CINEMATIC BACKGROUND SYSTEM
+-- ═══════════════════════════════════════════════════════════════
+
+local BackgroundContainer = Instance.new("Frame")
+BackgroundContainer.Name = "Background"
+BackgroundContainer.Size = UDim2.new(1, 0, 1, 0)
+BackgroundContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+BackgroundContainer.BorderSizePixel = 0
+BackgroundContainer.Parent = ScreenGui
+
+-- Cinematic Bars (Top & Bottom)
+local CinematicTop = Instance.new("Frame")
+CinematicTop.Name = "CinematicTop"
+CinematicTop.Size = UDim2.new(1, 0, 0.08, 0)
+CinematicTop.Position = UDim2.new(0, 0, -0.08, 0)
+CinematicTop.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CinematicTop.BorderSizePixel = 0
+CinematicTop.ZIndex = 100
+CinematicTop.Parent = BackgroundContainer
+
+local CinematicBottom = Instance.new("Frame")
+CinematicBottom.Name = "CinematicBottom"
+CinematicBottom.Size = UDim2.new(1, 0, 0.08, 0)
+CinematicBottom.Position = UDim2.new(0, 0, 1, 0)
+CinematicBottom.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CinematicBottom.BorderSizePixel = 0
+CinematicBottom.ZIndex = 100
+CinematicBottom.Parent = BackgroundContainer
+
+-- Background Image with Parallax Container
+local ParallaxContainer = Instance.new("Frame")
+ParallaxContainer.Name = "ParallaxContainer"
+ParallaxContainer.Size = UDim2.new(1, 0, 1, 0)
+ParallaxContainer.BackgroundTransparency = 1
+ParallaxContainer.ClipsDescendants = true
+ParallaxContainer.Parent = BackgroundContainer
 
 local BackgroundImage = Instance.new("ImageLabel")
-BackgroundImage.Size = UDim2.new(1.2, 0, 1.2, 0)
-BackgroundImage.Position = UDim2.new(-0.1, 0, -0.1, 0)
+BackgroundImage.Name = "BackgroundImage"
+BackgroundImage.Size = UDim2.new(1.3, 0, 1.3, 0)
+BackgroundImage.Position = UDim2.new(0.5, 0, 0.5, 0)
+BackgroundImage.AnchorPoint = Vector2.new(0.5, 0.5)
 BackgroundImage.BackgroundTransparency = 1
 BackgroundImage.Image = Config.BACKGROUND_IMAGE
 BackgroundImage.ImageTransparency = 1
 BackgroundImage.ScaleType = Enum.ScaleType.Crop
-BackgroundImage.Parent = BackgroundFrame
+BackgroundImage.Parent = ParallaxContainer
 
--- Dark overlay for better readability
+-- Dark Gradient Overlay
 local DarkOverlay = Instance.new("Frame")
+DarkOverlay.Name = "DarkOverlay"
 DarkOverlay.Size = UDim2.new(1, 0, 1, 0)
 DarkOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 DarkOverlay.BackgroundTransparency = 1
-DarkOverlay.Parent = BackgroundFrame
+DarkOverlay.BorderSizePixel = 0
+DarkOverlay.Parent = BackgroundContainer
 
--- Vignette effect
+CreateGradient(DarkOverlay, ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(0.3, Color3.fromRGB(5, 5, 12)),
+    ColorSequenceKeypoint.new(0.7, Color3.fromRGB(5, 5, 12)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+}, 90)
+
+-- Vignette
 local Vignette = Instance.new("ImageLabel")
-Vignette.Size = UDim2.new(1, 0, 1, 0)
+Vignette.Name = "Vignette"
+Vignette.Size = UDim2.new(1.2, 0, 1.2, 0)
+Vignette.Position = UDim2.new(0.5, 0, 0.5, 0)
+Vignette.AnchorPoint = Vector2.new(0.5, 0.5)
 Vignette.BackgroundTransparency = 1
 Vignette.Image = "rbxassetid://1039998940"
 Vignette.ImageColor3 = Color3.fromRGB(0, 0, 0)
 Vignette.ImageTransparency = 1
 Vignette.ScaleType = Enum.ScaleType.Stretch
-Vignette.Parent = BackgroundFrame
+Vignette.Parent = BackgroundContainer
 
 -- ═══════════════════════════════════════════════════════════════
--- ✨ PARTICLE CONTAINER (Floating fire particles)
+-- ✨ PARTICLE SYSTEM (No Emojis - Pure Visual Effects)
 -- ═══════════════════════════════════════════════════════════════
 
 local ParticleContainer = Instance.new("Frame")
+ParticleContainer.Name = "Particles"
 ParticleContainer.Size = UDim2.new(1, 0, 1, 0)
 ParticleContainer.BackgroundTransparency = 1
 ParticleContainer.ClipsDescendants = true
-ParticleContainer.Parent = BackgroundFrame
+ParticleContainer.ZIndex = 2
+ParticleContainer.Parent = BackgroundContainer
 
--- Create floating particles
-local function CreateParticle()
+local function CreateFloatingParticle()
     local particle = Instance.new("Frame")
-    particle.Size = UDim2.new(0, math.random(3, 8), 0, math.random(3, 8))
-    particle.Position = UDim2.new(math.random(0, 100)/100, 0, 1.1, 0)
-    particle.BackgroundColor3 = math.random() > 0.5 and Colors.Accent or Colors.Primary
-    particle.BackgroundTransparency = math.random(30, 70)/100
+    particle.Size = UDim2.new(0, math.random(2, 5), 0, math.random(2, 5))
+    particle.Position = UDim2.new(math.random(0, 100)/100, 0, 1.05, 0)
+    particle.BackgroundColor3 = Color3.fromHSV(math.random(0, 20)/360, 0.8, 1)
+    particle.BackgroundTransparency = math.random(40, 70)/100
     particle.BorderSizePixel = 0
+    particle.ZIndex = 2
     particle.Parent = ParticleContainer
-    Instance.new("UICorner", particle).CornerRadius = UDim.new(1, 0)
+    CreateCorner(particle, 50)
     
-    -- Glow for particle
-    local particleGlow = Instance.new("ImageLabel")
-    particleGlow.Size = UDim2.new(3, 0, 3, 0)
-    particleGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    particleGlow.AnchorPoint = Vector2.new(0.5, 0.5)
-    particleGlow.BackgroundTransparency = 1
-    particleGlow.Image = "rbxassetid://5028857084"
-    particleGlow.ImageColor3 = particle.BackgroundColor3
-    particleGlow.ImageTransparency = 0.5
-    particleGlow.ScaleType = Enum.ScaleType.Slice
-    particleGlow.SliceCenter = Rect.new(24, 24, 276, 276)
-    particleGlow.Parent = particle
-    
-    local duration = math.random(4, 8)
-    local xOffset = math.random(-100, 100)
+    local duration = math.random(8, 15)
+    local xDrift = math.random(-80, 80)
     
     TweenService:Create(particle, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
-        Position = UDim2.new(particle.Position.X.Scale, xOffset, -0.1, 0),
+        Position = UDim2.new(particle.Position.X.Scale, xDrift, -0.1, 0),
         BackgroundTransparency = 1,
-        Rotation = math.random(-180, 180)
+        Size = UDim2.new(0, math.random(1, 3), 0, math.random(1, 3))
     }):Play()
     
     task.delay(duration, function()
-        particle:Destroy()
+        if particle then particle:Destroy() end
+    end)
+end
+
+-- Light Beam Effect
+local LightBeamContainer = Instance.new("Frame")
+LightBeamContainer.Name = "LightBeams"
+LightBeamContainer.Size = UDim2.new(1, 0, 1, 0)
+LightBeamContainer.BackgroundTransparency = 1
+LightBeamContainer.ClipsDescendants = true
+LightBeamContainer.ZIndex = 1
+LightBeamContainer.Parent = BackgroundContainer
+
+local function CreateLightBeam()
+    local beam = Instance.new("Frame")
+    beam.Size = UDim2.new(0, math.random(100, 300), 0, 2000)
+    beam.Position = UDim2.new(math.random(0, 100)/100, 0, 0.5, 0)
+    beam.AnchorPoint = Vector2.new(0.5, 0.5)
+    beam.Rotation = math.random(-30, 30)
+    beam.BackgroundTransparency = 1
+    beam.BorderSizePixel = 0
+    beam.ZIndex = 1
+    beam.Parent = LightBeamContainer
+    
+    local beamGradient = Instance.new("UIGradient")
+    beamGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.4, Colors.PrimaryGlow),
+        ColorSequenceKeypoint.new(0.6, Colors.PrimaryGlow),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+    }
+    beamGradient.Rotation = 90
+    beamGradient.Parent = beam
+    
+    beam.BackgroundColor3 = Colors.PrimaryGlow
+    
+    TweenService:Create(beam, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {
+        BackgroundTransparency = 0.92
+    }):Play()
+    
+    TweenService:Create(beam, TweenInfo.new(8, Enum.EasingStyle.Linear), {
+        Position = UDim2.new(beam.Position.X.Scale + 0.3, 0, 0.5, 0),
+        Rotation = beam.Rotation + 10
+    }):Play()
+    
+    task.delay(2, function()
+        TweenService:Create(beam, TweenInfo.new(2, Enum.EasingStyle.Quint), {
+            BackgroundTransparency = 1
+        }):Play()
+    end)
+    
+    task.delay(4, function()
+        if beam then beam:Destroy() end
     end)
 end
 
 -- ═══════════════════════════════════════════════════════════════
--- 🔥 MAIN CONTENT CONTAINER
+-- 📦 MAIN CONTENT CARD
 -- ═══════════════════════════════════════════════════════════════
 
-local ContentContainer = Instance.new("Frame")
-ContentContainer.Size = UDim2.new(1, 0, 1, 0)
-ContentContainer.BackgroundTransparency = 1
-ContentContainer.Parent = BackgroundFrame
+local MainCard = Instance.new("Frame")
+MainCard.Name = "MainCard"
+MainCard.Size = UDim2.new(0, 680, 0, 520)
+MainCard.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainCard.AnchorPoint = Vector2.new(0.5, 0.5)
+MainCard.BackgroundColor3 = Colors.Surface
+MainCard.BackgroundTransparency = 1
+MainCard.BorderSizePixel = 0
+MainCard.ZIndex = 10
+MainCard.Parent = BackgroundContainer
+CreateCorner(MainCard, 20)
+
+local MainCardStroke = CreateStroke(MainCard, Colors.Border, 1, 1)
+
+-- Glow Effect Behind Card
+local CardGlow = Instance.new("ImageLabel")
+CardGlow.Name = "Glow"
+CardGlow.Size = UDim2.new(1, 100, 1, 100)
+CardGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
+CardGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+CardGlow.BackgroundTransparency = 1
+CardGlow.Image = "rbxassetid://5028857084"
+CardGlow.ImageColor3 = Colors.Primary
+CardGlow.ImageTransparency = 1
+CardGlow.ScaleType = Enum.ScaleType.Slice
+CardGlow.SliceCenter = Rect.new(24, 24, 276, 276)
+CardGlow.ZIndex = 9
+CardGlow.Parent = MainCard
+
+-- Card Inner Gradient
+local CardGradient = Instance.new("UIGradient")
+CardGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(22, 22, 32)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(15, 15, 22)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 15))
+}
+CardGradient.Rotation = 180
+CardGradient.Parent = MainCard
 
 -- ═══════════════════════════════════════════════════════════════
--- 🎯 LOGO
+-- 🔝 HEADER SECTION
 -- ═══════════════════════════════════════════════════════════════
 
-local LogoContainer = Instance.new("Frame")
-LogoContainer.Size = UDim2.new(0, 140, 0, 140)
-LogoContainer.Position = UDim2.new(0.5, 0, 0.15, 0)
-LogoContainer.AnchorPoint = Vector2.new(0.5, 0)
-LogoContainer.BackgroundColor3 = Colors.Primary
-LogoContainer.BackgroundTransparency = 0.3
-LogoContainer.BorderSizePixel = 0
-LogoContainer.Parent = ContentContainer
-Instance.new("UICorner", LogoContainer).CornerRadius = UDim.new(0, 20)
+-- Top Accent Line
+local AccentLine = Instance.new("Frame")
+AccentLine.Name = "AccentLine"
+AccentLine.Size = UDim2.new(1, 0, 0, 4)
+AccentLine.Position = UDim2.new(0, 0, 0, 0)
+AccentLine.BackgroundColor3 = Colors.Primary
+AccentLine.BackgroundTransparency = 1
+AccentLine.BorderSizePixel = 0
+AccentLine.ZIndex = 11
+AccentLine.Parent = MainCard
+CreateCorner(AccentLine, 20)
 
--- Logo starts invisible and scaled down
-LogoContainer.Size = UDim2.new(0, 0, 0, 0)
-LogoContainer.BackgroundTransparency = 1
+local AccentGradient = Instance.new("UIGradient")
+AccentGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Colors.PrimaryDark),
+    ColorSequenceKeypoint.new(0.3, Colors.Primary),
+    ColorSequenceKeypoint.new(0.5, Colors.Accent),
+    ColorSequenceKeypoint.new(0.7, Colors.Primary),
+    ColorSequenceKeypoint.new(1, Colors.PrimaryDark)
+}
+AccentGradient.Parent = AccentLine
 
-local LogoStroke = Instance.new("UIStroke")
-LogoStroke.Color = Colors.Accent
-LogoStroke.Thickness = 4
-LogoStroke.Transparency = 1
-LogoStroke.Parent = LogoContainer
+-- Header Container
+local HeaderSection = Instance.new("Frame")
+HeaderSection.Name = "Header"
+HeaderSection.Size = UDim2.new(1, -50, 0, 80)
+HeaderSection.Position = UDim2.new(0, 25, 0, 20)
+HeaderSection.BackgroundTransparency = 1
+HeaderSection.ZIndex = 11
+HeaderSection.Parent = MainCard
+
+-- Logo
+local LogoFrame = Instance.new("Frame")
+LogoFrame.Name = "LogoFrame"
+LogoFrame.Size = UDim2.new(0, 65, 0, 65)
+LogoFrame.Position = UDim2.new(0, 0, 0, 5)
+LogoFrame.BackgroundColor3 = Colors.SurfaceLight
+LogoFrame.BackgroundTransparency = 1
+LogoFrame.BorderSizePixel = 0
+LogoFrame.ZIndex = 12
+LogoFrame.Parent = HeaderSection
+CreateCorner(LogoFrame, 14)
+
+local LogoStroke = CreateStroke(LogoFrame, Colors.Primary, 2, 1)
 
 local LogoGlow = Instance.new("ImageLabel")
-LogoGlow.Size = UDim2.new(1, 80, 1, 80)
+LogoGlow.Name = "Glow"
+LogoGlow.Size = UDim2.new(1, 40, 1, 40)
 LogoGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
 LogoGlow.AnchorPoint = Vector2.new(0.5, 0.5)
 LogoGlow.BackgroundTransparency = 1
 LogoGlow.Image = "rbxassetid://5028857084"
-LogoGlow.ImageColor3 = Colors.Accent
+LogoGlow.ImageColor3 = Colors.Primary
 LogoGlow.ImageTransparency = 1
 LogoGlow.ScaleType = Enum.ScaleType.Slice
 LogoGlow.SliceCenter = Rect.new(24, 24, 276, 276)
-LogoGlow.Parent = LogoContainer
+LogoGlow.ZIndex = 11
+LogoGlow.Parent = LogoFrame
 
 local LogoImage = Instance.new("ImageLabel")
-LogoImage.Size = UDim2.new(0.85, 0, 0.85, 0)
+LogoImage.Name = "Logo"
+LogoImage.Size = UDim2.new(0.75, 0, 0.75, 0)
 LogoImage.Position = UDim2.new(0.5, 0, 0.5, 0)
 LogoImage.AnchorPoint = Vector2.new(0.5, 0.5)
 LogoImage.BackgroundTransparency = 1
 LogoImage.Image = Config.LOGO_IMAGE
 LogoImage.ImageTransparency = 1
 LogoImage.ScaleType = Enum.ScaleType.Fit
-LogoImage.Parent = LogoContainer
+LogoImage.ZIndex = 13
+LogoImage.Parent = LogoFrame
 
--- ═══════════════════════════════════════════════════════════════
--- 🔥 FIRE EMOJI DECORATIONS
--- ═══════════════════════════════════════════════════════════════
+-- Brand Text
+local BrandTitle = Instance.new("TextLabel")
+BrandTitle.Name = "BrandTitle"
+BrandTitle.Size = UDim2.new(0, 200, 0, 32)
+BrandTitle.Position = UDim2.new(0, 80, 0, 8)
+BrandTitle.BackgroundTransparency = 1
+BrandTitle.Text = "KIRA HUB"
+BrandTitle.TextColor3 = Colors.Text
+BrandTitle.TextTransparency = 1
+BrandTitle.Font = Enum.Font.GothamBlack
+BrandTitle.TextSize = 26
+BrandTitle.TextXAlignment = Enum.TextXAlignment.Left
+BrandTitle.ZIndex = 12
+BrandTitle.Parent = HeaderSection
 
-local LeftFire = Instance.new("TextLabel")
-LeftFire.Size = UDim2.new(0, 60, 0, 60)
-LeftFire.Position = UDim2.new(0.5, -180, 0.15, 40)
-LeftFire.AnchorPoint = Vector2.new(0.5, 0)
-LeftFire.BackgroundTransparency = 1
-LeftFire.Text = "🔥"
-LeftFire.TextColor3 = Colors.White
-LeftFire.TextSize = 50
-LeftFire.TextTransparency = 1
-LeftFire.Font = Enum.Font.GothamBlack
-LeftFire.Parent = ContentContainer
-
-local RightFire = Instance.new("TextLabel")
-RightFire.Size = UDim2.new(0, 60, 0, 60)
-RightFire.Position = UDim2.new(0.5, 120, 0.15, 40)
-RightFire.AnchorPoint = Vector2.new(0.5, 0)
-RightFire.BackgroundTransparency = 1
-RightFire.Text = "🔥"
-RightFire.TextColor3 = Colors.White
-RightFire.TextSize = 50
-RightFire.TextTransparency = 1
-RightFire.Font = Enum.Font.GothamBlack
-RightFire.Parent = ContentContainer
-
--- ═══════════════════════════════════════════════════════════════
--- 📝 KIRA HUB TITLE
--- ═══════════════════════════════════════════════════════════════
-
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, 0, 0, 50)
-TitleLabel.Position = UDim2.new(0, 0, 0.35, 0)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "KIRA HUB"
-TitleLabel.TextColor3 = Colors.White
-TitleLabel.TextTransparency = 1
-TitleLabel.Font = Enum.Font.GothamBlack
-TitleLabel.TextSize = 52
-TitleLabel.Parent = ContentContainer
-
-local TitleStroke = Instance.new("UIStroke")
-TitleStroke.Color = Colors.Primary
-TitleStroke.Thickness = 3
-TitleStroke.Transparency = 1
-TitleStroke.Parent = TitleLabel
+local BrandSubtitle = Instance.new("TextLabel")
+BrandSubtitle.Name = "BrandSubtitle"
+BrandSubtitle.Size = UDim2.new(0, 250, 0, 18)
+BrandSubtitle.Position = UDim2.new(0, 80, 0, 40)
+BrandSubtitle.BackgroundTransparency = 1
+BrandSubtitle.Text = "Last Letter | Premium Edition"
+BrandSubtitle.TextColor3 = Colors.TextSecondary
+BrandSubtitle.TextTransparency = 1
+BrandSubtitle.Font = Enum.Font.GothamMedium
+BrandSubtitle.TextSize = 13
+BrandSubtitle.TextXAlignment = Enum.TextXAlignment.Left
+BrandSubtitle.ZIndex = 12
+BrandSubtitle.Parent = HeaderSection
 
 -- Version Badge
-local VersionBadge = Instance.new("TextLabel")
-VersionBadge.Size = UDim2.new(0, 80, 0, 30)
-VersionBadge.Position = UDim2.new(0.5, 100, 0.35, -5)
-VersionBadge.AnchorPoint = Vector2.new(0, 0)
-VersionBadge.BackgroundColor3 = Colors.Accent
+local VersionBadge = Instance.new("Frame")
+VersionBadge.Name = "VersionBadge"
+VersionBadge.Size = UDim2.new(0, 60, 0, 24)
+VersionBadge.Position = UDim2.new(0, 80, 0, 58)
+VersionBadge.BackgroundColor3 = Colors.Primary
 VersionBadge.BackgroundTransparency = 1
-VersionBadge.Text = Config.VERSION
-VersionBadge.TextColor3 = Colors.White
-VersionBadge.TextTransparency = 1
-VersionBadge.Font = Enum.Font.GothamBlack
-VersionBadge.TextSize = 18
-VersionBadge.Parent = ContentContainer
-Instance.new("UICorner", VersionBadge).CornerRadius = UDim.new(0, 8)
+VersionBadge.BorderSizePixel = 0
+VersionBadge.ZIndex = 12
+VersionBadge.Parent = HeaderSection
+CreateCorner(VersionBadge, 6)
+
+local VersionText = Instance.new("TextLabel")
+VersionText.Name = "Text"
+VersionText.Size = UDim2.new(1, 0, 1, 0)
+VersionText.BackgroundTransparency = 1
+VersionText.Text = "v" .. Config.VERSION
+VersionText.TextColor3 = Colors.Text
+VersionText.TextTransparency = 1
+VersionText.Font = Enum.Font.GothamBold
+VersionText.TextSize = 11
+VersionText.ZIndex = 13
+VersionText.Parent = VersionBadge
+
+-- NEW Badge
+local NewBadge = Instance.new("Frame")
+NewBadge.Name = "NewBadge"
+NewBadge.Size = UDim2.new(0, 45, 0, 24)
+NewBadge.Position = UDim2.new(0, 145, 0, 58)
+NewBadge.BackgroundColor3 = Colors.Accent
+NewBadge.BackgroundTransparency = 1
+NewBadge.BorderSizePixel = 0
+NewBadge.ZIndex = 12
+NewBadge.Parent = HeaderSection
+CreateCorner(NewBadge, 6)
+
+local NewText = Instance.new("TextLabel")
+NewText.Name = "Text"
+NewText.Size = UDim2.new(1, 0, 1, 0)
+NewText.BackgroundTransparency = 1
+NewText.Text = "NEW"
+NewText.TextColor3 = Color3.fromRGB(0, 0, 0)
+NewText.TextTransparency = 1
+NewText.Font = Enum.Font.GothamBlack
+NewText.TextSize = 10
+NewText.ZIndex = 13
+NewText.Parent = NewBadge
+
+-- Close Button
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 36, 0, 36)
+CloseButton.Position = UDim2.new(1, 0, 0, 10)
+CloseButton.AnchorPoint = Vector2.new(1, 0)
+CloseButton.BackgroundColor3 = Colors.SurfaceLight
+CloseButton.BackgroundTransparency = 1
+CloseButton.Text = ""
+CloseButton.AutoButtonColor = false
+CloseButton.ZIndex = 12
+CloseButton.Parent = HeaderSection
+CreateCorner(CloseButton, 8)
+CreateStroke(CloseButton, Colors.Border, 1, 1)
+
+local CloseIcon = Instance.new("TextLabel")
+CloseIcon.Size = UDim2.new(1, 0, 1, 0)
+CloseIcon.BackgroundTransparency = 1
+CloseIcon.Text = "×"
+CloseIcon.TextColor3 = Colors.TextMuted
+CloseIcon.TextTransparency = 1
+CloseIcon.Font = Enum.Font.GothamBold
+CloseIcon.TextSize = 22
+CloseIcon.ZIndex = 13
+CloseIcon.Parent = CloseButton
 
 -- ═══════════════════════════════════════════════════════════════
--- 📢 MAIN ANNOUNCEMENT TEXT
+-- 📢 ANNOUNCEMENT BANNER
 -- ═══════════════════════════════════════════════════════════════
 
-local AnnouncementContainer = Instance.new("Frame")
-AnnouncementContainer.Size = UDim2.new(0.9, 0, 0, 120)
-AnnouncementContainer.Position = UDim2.new(0.5, 0, 0.45, 0)
-AnnouncementContainer.AnchorPoint = Vector2.new(0.5, 0)
-AnnouncementContainer.BackgroundColor3 = Colors.Dark
-AnnouncementContainer.BackgroundTransparency = 1
-AnnouncementContainer.BorderSizePixel = 0
-AnnouncementContainer.Parent = ContentContainer
-Instance.new("UICorner", AnnouncementContainer).CornerRadius = UDim.new(0, 16)
+local AnnouncementBanner = Instance.new("Frame")
+AnnouncementBanner.Name = "AnnouncementBanner"
+AnnouncementBanner.Size = UDim2.new(1, -50, 0, 75)
+AnnouncementBanner.Position = UDim2.new(0, 25, 0, 105)
+AnnouncementBanner.BackgroundColor3 = Color3.fromRGB(35, 28, 20)
+AnnouncementBanner.BackgroundTransparency = 1
+AnnouncementBanner.BorderSizePixel = 0
+AnnouncementBanner.ZIndex = 11
+AnnouncementBanner.Parent = MainCard
+CreateCorner(AnnouncementBanner, 12)
 
-local AnnouncementStroke = Instance.new("UIStroke")
-AnnouncementStroke.Color = Colors.Gold
-AnnouncementStroke.Thickness = 3
-AnnouncementStroke.Transparency = 1
-AnnouncementStroke.Parent = AnnouncementContainer
+local BannerStroke = CreateStroke(AnnouncementBanner, Colors.AccentGold, 1, 1)
 
-local AnnouncementGlow = Instance.new("ImageLabel")
-AnnouncementGlow.Size = UDim2.new(1, 60, 1, 60)
-AnnouncementGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
-AnnouncementGlow.AnchorPoint = Vector2.new(0.5, 0.5)
-AnnouncementGlow.BackgroundTransparency = 1
-AnnouncementGlow.Image = "rbxassetid://5028857084"
-AnnouncementGlow.ImageColor3 = Colors.Gold
-AnnouncementGlow.ImageTransparency = 1
-AnnouncementGlow.ScaleType = Enum.ScaleType.Slice
-AnnouncementGlow.SliceCenter = Rect.new(24, 24, 276, 276)
-AnnouncementGlow.ZIndex = 0
-AnnouncementGlow.Parent = AnnouncementContainer
+local BannerGlow = Instance.new("ImageLabel")
+BannerGlow.Name = "Glow"
+BannerGlow.Size = UDim2.new(1, 30, 1, 30)
+BannerGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
+BannerGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+BannerGlow.BackgroundTransparency = 1
+BannerGlow.Image = "rbxassetid://5028857084"
+BannerGlow.ImageColor3 = Colors.AccentGold
+BannerGlow.ImageTransparency = 1
+BannerGlow.ScaleType = Enum.ScaleType.Slice
+BannerGlow.SliceCenter = Rect.new(24, 24, 276, 276)
+BannerGlow.ZIndex = 10
+BannerGlow.Parent = AnnouncementBanner
 
-local AnnouncementIcon = Instance.new("TextLabel")
-AnnouncementIcon.Size = UDim2.new(1, 0, 0, 30)
-AnnouncementIcon.Position = UDim2.new(0, 0, 0, 10)
-AnnouncementIcon.BackgroundTransparency = 1
-AnnouncementIcon.Text = "📢"
-AnnouncementIcon.TextSize = 28
-AnnouncementIcon.TextTransparency = 1
-AnnouncementIcon.Parent = AnnouncementContainer
+local BannerGradient = Instance.new("UIGradient")
+BannerGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 35, 22)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 25, 18))
+}
+BannerGradient.Rotation = 90
+BannerGradient.Parent = AnnouncementBanner
 
-local AnnouncementText = Instance.new("TextLabel")
-AnnouncementText.Size = UDim2.new(1, -40, 0, 40)
-AnnouncementText.Position = UDim2.new(0.5, 0, 0, 40)
-AnnouncementText.AnchorPoint = Vector2.new(0.5, 0)
-AnnouncementText.BackgroundTransparency = 1
-AnnouncementText.Text = ""  -- Will be typed out
-AnnouncementText.TextColor3 = Colors.Gold
-AnnouncementText.TextTransparency = 0
-AnnouncementText.Font = Enum.Font.GothamBlack
-AnnouncementText.TextSize = 24
-AnnouncementText.TextWrapped = true
-AnnouncementText.Parent = AnnouncementContainer
+-- Banner Content
+local BannerTitle = Instance.new("TextLabel")
+BannerTitle.Name = "Title"
+BannerTitle.Size = UDim2.new(1, -30, 0, 26)
+BannerTitle.Position = UDim2.new(0, 15, 0, 12)
+BannerTitle.BackgroundTransparency = 1
+BannerTitle.Text = "NEW LOADSTRING UPDATE AVAILABLE"
+BannerTitle.TextColor3 = Colors.AccentGold
+BannerTitle.TextTransparency = 1
+BannerTitle.Font = Enum.Font.GothamBlack
+BannerTitle.TextSize = 18
+BannerTitle.TextXAlignment = Enum.TextXAlignment.Left
+BannerTitle.ZIndex = 12
+BannerTitle.Parent = AnnouncementBanner
 
-local SubText = Instance.new("TextLabel")
-SubText.Size = UDim2.new(1, -40, 0, 25)
-SubText.Position = UDim2.new(0.5, 0, 0, 85)
-SubText.AnchorPoint = Vector2.new(0.5, 0)
-SubText.BackgroundTransparency = 1
-SubText.Text = Config.SUB_TEXT
-SubText.TextColor3 = Colors.White
-SubText.TextTransparency = 1
-SubText.Font = Enum.Font.GothamMedium
-SubText.TextSize = 16
-SubText.Parent = AnnouncementContainer
+local BannerSubtitle = Instance.new("TextLabel")
+BannerSubtitle.Name = "Subtitle"
+BannerSubtitle.Size = UDim2.new(1, -30, 0, 18)
+BannerSubtitle.Position = UDim2.new(0, 15, 0, 40)
+BannerSubtitle.BackgroundTransparency = 1
+BannerSubtitle.Text = "Get the latest script & key from our Discord server to unlock all features"
+BannerSubtitle.TextColor3 = Colors.TextSecondary
+BannerSubtitle.TextTransparency = 1
+BannerSubtitle.Font = Enum.Font.GothamMedium
+BannerSubtitle.TextSize = 12
+BannerSubtitle.TextXAlignment = Enum.TextXAlignment.Left
+BannerSubtitle.ZIndex = 12
+BannerSubtitle.Parent = AnnouncementBanner
 
 -- ═══════════════════════════════════════════════════════════════
--- 🔗 DISCORD BUTTON
+-- ✨ FEATURES SECTION
 -- ═══════════════════════════════════════════════════════════════
 
-local ButtonContainer = Instance.new("Frame")
-ButtonContainer.Size = UDim2.new(0, 320, 0, 70)
-ButtonContainer.Position = UDim2.new(0.5, 0, 0.72, 0)
-ButtonContainer.AnchorPoint = Vector2.new(0.5, 0)
-ButtonContainer.BackgroundTransparency = 1
-ButtonContainer.Parent = ContentContainer
+local FeaturesLabel = Instance.new("TextLabel")
+FeaturesLabel.Name = "FeaturesLabel"
+FeaturesLabel.Size = UDim2.new(1, -50, 0, 18)
+FeaturesLabel.Position = UDim2.new(0, 25, 0, 192)
+FeaturesLabel.BackgroundTransparency = 1
+FeaturesLabel.Text = "FEATURES"
+FeaturesLabel.TextColor3 = Colors.TextMuted
+FeaturesLabel.TextTransparency = 1
+FeaturesLabel.Font = Enum.Font.GothamBold
+FeaturesLabel.TextSize = 10
+FeaturesLabel.TextXAlignment = Enum.TextXAlignment.Left
+FeaturesLabel.ZIndex = 11
+FeaturesLabel.Parent = MainCard
 
+local FeaturesContainer = Instance.new("Frame")
+FeaturesContainer.Name = "Features"
+FeaturesContainer.Size = UDim2.new(1, -50, 0, 65)
+FeaturesContainer.Position = UDim2.new(0, 25, 0, 212)
+FeaturesContainer.BackgroundTransparency = 1
+FeaturesContainer.ZIndex = 11
+FeaturesContainer.Parent = MainCard
+
+local FeatureElements = {}
+for i, feature in ipairs(Config.FEATURES) do
+    local featureCard = Instance.new("Frame")
+    featureCard.Name = "Feature" .. i
+    featureCard.Size = UDim2.new(0.25, -8, 1, 0)
+    featureCard.Position = UDim2.new((i-1) * 0.25, (i > 1 and 4 or 0), 0, 0)
+    featureCard.BackgroundColor3 = Colors.SurfaceLight
+    featureCard.BackgroundTransparency = 1
+    featureCard.BorderSizePixel = 0
+    featureCard.ZIndex = 11
+    featureCard.Parent = FeaturesContainer
+    CreateCorner(featureCard, 10)
+    
+    local featureStroke = CreateStroke(featureCard, Colors.Border, 1, 1)
+    
+    -- Accent dot
+    local accentDot = Instance.new("Frame")
+    accentDot.Name = "Dot"
+    accentDot.Size = UDim2.new(0, 6, 0, 6)
+    accentDot.Position = UDim2.new(0, 12, 0, 12)
+    accentDot.BackgroundColor3 = Colors.Accent
+    accentDot.BackgroundTransparency = 1
+    accentDot.BorderSizePixel = 0
+    accentDot.ZIndex = 12
+    accentDot.Parent = featureCard
+    CreateCorner(accentDot, 50)
+    
+    local featureTitle = Instance.new("TextLabel")
+    featureTitle.Name = "Title"
+    featureTitle.Size = UDim2.new(1, -20, 0, 16)
+    featureTitle.Position = UDim2.new(0, 10, 0, 22)
+    featureTitle.BackgroundTransparency = 1
+    featureTitle.Text = feature.title
+    featureTitle.TextColor3 = Colors.Text
+    featureTitle.TextTransparency = 1
+    featureTitle.Font = Enum.Font.GothamBold
+    featureTitle.TextSize = 11
+    featureTitle.TextXAlignment = Enum.TextXAlignment.Left
+    featureTitle.TextTruncate = Enum.TextTruncate.AtEnd
+    featureTitle.ZIndex = 12
+    featureTitle.Parent = featureCard
+    
+    local featureDesc = Instance.new("TextLabel")
+    featureDesc.Name = "Desc"
+    featureDesc.Size = UDim2.new(1, -20, 0, 14)
+    featureDesc.Position = UDim2.new(0, 10, 0, 40)
+    featureDesc.BackgroundTransparency = 1
+    featureDesc.Text = feature.desc
+    featureDesc.TextColor3 = Colors.TextMuted
+    featureDesc.TextTransparency = 1
+    featureDesc.Font = Enum.Font.Gotham
+    featureDesc.TextSize = 9
+    featureDesc.TextXAlignment = Enum.TextXAlignment.Left
+    featureDesc.TextTruncate = Enum.TextTruncate.AtEnd
+    featureDesc.ZIndex = 12
+    featureDesc.Parent = featureCard
+    
+    table.insert(FeatureElements, {
+        card = featureCard,
+        stroke = featureStroke,
+        dot = accentDot,
+        title = featureTitle,
+        desc = featureDesc
+    })
+end
+
+-- ═══════════════════════════════════════════════════════════════
+-- 📋 CHANGELOG SECTION (FIXED - No Overflow)
+-- ═══════════════════════════════════════════════════════════════
+
+local ChangelogLabel = Instance.new("TextLabel")
+ChangelogLabel.Name = "ChangelogLabel"
+ChangelogLabel.Size = UDim2.new(1, -50, 0, 18)
+ChangelogLabel.Position = UDim2.new(0, 25, 0, 287)
+ChangelogLabel.BackgroundTransparency = 1
+ChangelogLabel.Text = "WHAT'S NEW IN v" .. Config.VERSION
+ChangelogLabel.TextColor3 = Colors.TextMuted
+ChangelogLabel.TextTransparency = 1
+ChangelogLabel.Font = Enum.Font.GothamBold
+ChangelogLabel.TextSize = 10
+ChangelogLabel.TextXAlignment = Enum.TextXAlignment.Left
+ChangelogLabel.ZIndex = 11
+ChangelogLabel.Parent = MainCard
+
+local ChangelogContainer = Instance.new("Frame")
+ChangelogContainer.Name = "Changelog"
+ChangelogContainer.Size = UDim2.new(1, -50, 0, 75)
+ChangelogContainer.Position = UDim2.new(0, 25, 0, 307)
+ChangelogContainer.BackgroundColor3 = Colors.SurfaceLight
+ChangelogContainer.BackgroundTransparency = 1
+ChangelogContainer.BorderSizePixel = 0
+ChangelogContainer.ClipsDescendants = true
+ChangelogContainer.ZIndex = 11
+ChangelogContainer.Parent = MainCard
+CreateCorner(ChangelogContainer, 10)
+CreateStroke(ChangelogContainer, Colors.Border, 1, 1)
+
+local ChangelogInner = Instance.new("Frame")
+ChangelogInner.Name = "Inner"
+ChangelogInner.Size = UDim2.new(1, 0, 1, 0)
+ChangelogInner.BackgroundTransparency = 1
+ChangelogInner.ZIndex = 11
+ChangelogInner.Parent = ChangelogContainer
+
+local ChangelogPadding = Instance.new("UIPadding")
+ChangelogPadding.PaddingTop = UDim.new(0, 12)
+ChangelogPadding.PaddingLeft = UDim.new(0, 14)
+ChangelogPadding.PaddingRight = UDim.new(0, 14)
+ChangelogPadding.Parent = ChangelogInner
+
+local ChangelogLayout = Instance.new("UIListLayout")
+ChangelogLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ChangelogLayout.Padding = UDim.new(0, 6)
+ChangelogLayout.Parent = ChangelogInner
+
+local ChangelogElements = {}
+for i, change in ipairs(Config.CHANGELOG) do
+    local changeRow = Instance.new("Frame")
+    changeRow.Name = "Change" .. i
+    changeRow.Size = UDim2.new(1, 0, 0, 12)
+    changeRow.BackgroundTransparency = 1
+    changeRow.LayoutOrder = i
+    changeRow.ZIndex = 12
+    changeRow.Parent = ChangelogInner
+    
+    local bullet = Instance.new("Frame")
+    bullet.Name = "Bullet"
+    bullet.Size = UDim2.new(0, 4, 0, 4)
+    bullet.Position = UDim2.new(0, 0, 0.5, 0)
+    bullet.AnchorPoint = Vector2.new(0, 0.5)
+    bullet.BackgroundColor3 = Colors.Accent
+    bullet.BackgroundTransparency = 1
+    bullet.BorderSizePixel = 0
+    bullet.ZIndex = 12
+    bullet.Parent = changeRow
+    CreateCorner(bullet, 50)
+    
+    local changeText = Instance.new("TextLabel")
+    changeText.Name = "Text"
+    changeText.Size = UDim2.new(1, -14, 1, 0)
+    changeText.Position = UDim2.new(0, 14, 0, 0)
+    changeText.BackgroundTransparency = 1
+    changeText.Text = change
+    changeText.TextColor3 = Colors.TextSecondary
+    changeText.TextTransparency = 1
+    changeText.Font = Enum.Font.Gotham
+    changeText.TextSize = 11
+    changeText.TextXAlignment = Enum.TextXAlignment.Left
+    changeText.ZIndex = 12
+    changeText.Parent = changeRow
+    
+    table.insert(ChangelogElements, {row = changeRow, bullet = bullet, text = changeText})
+end
+
+-- ═══════════════════════════════════════════════════════════════
+-- 🔗 ACTION BUTTONS
+-- ═══════════════════════════════════════════════════════════════
+
+local ActionContainer = Instance.new("Frame")
+ActionContainer.Name = "Actions"
+ActionContainer.Size = UDim2.new(1, -50, 0, 95)
+ActionContainer.Position = UDim2.new(0, 25, 0, 395)
+ActionContainer.BackgroundTransparency = 1
+ActionContainer.ZIndex = 11
+ActionContainer.Parent = MainCard
+
+-- Discord Button
 local DiscordButton = Instance.new("TextButton")
-DiscordButton.Size = UDim2.new(1, 0, 1, 0)
-DiscordButton.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+DiscordButton.Name = "DiscordButton"
+DiscordButton.Size = UDim2.new(0.5, -6, 0, 45)
+DiscordButton.Position = UDim2.new(0, 0, 0, 0)
+DiscordButton.BackgroundColor3 = Colors.Discord
 DiscordButton.BackgroundTransparency = 1
 DiscordButton.Text = ""
 DiscordButton.AutoButtonColor = false
-DiscordButton.Parent = ButtonContainer
-Instance.new("UICorner", DiscordButton).CornerRadius = UDim.new(0, 14)
+DiscordButton.ZIndex = 11
+DiscordButton.Parent = ActionContainer
+CreateCorner(DiscordButton, 10)
 
-local ButtonStroke = Instance.new("UIStroke")
-ButtonStroke.Color = Color3.fromRGB(130, 140, 255)
-ButtonStroke.Thickness = 3
-ButtonStroke.Transparency = 1
-ButtonStroke.Parent = DiscordButton
+local DiscordStroke = CreateStroke(DiscordButton, Colors.Discord, 1, 1)
 
-local ButtonGlow = Instance.new("ImageLabel")
-ButtonGlow.Size = UDim2.new(1, 50, 1, 50)
-ButtonGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
-ButtonGlow.AnchorPoint = Vector2.new(0.5, 0.5)
-ButtonGlow.BackgroundTransparency = 1
-ButtonGlow.Image = "rbxassetid://5028857084"
-ButtonGlow.ImageColor3 = Color3.fromRGB(88, 101, 242)
-ButtonGlow.ImageTransparency = 1
-ButtonGlow.ScaleType = Enum.ScaleType.Slice
-ButtonGlow.SliceCenter = Rect.new(24, 24, 276, 276)
-ButtonGlow.ZIndex = 0
-ButtonGlow.Parent = DiscordButton
+local DiscordGlow = Instance.new("ImageLabel")
+DiscordGlow.Name = "Glow"
+DiscordGlow.Size = UDim2.new(1, 20, 1, 20)
+DiscordGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
+DiscordGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+DiscordGlow.BackgroundTransparency = 1
+DiscordGlow.Image = "rbxassetid://5028857084"
+DiscordGlow.ImageColor3 = Colors.Discord
+DiscordGlow.ImageTransparency = 1
+DiscordGlow.ScaleType = Enum.ScaleType.Slice
+DiscordGlow.SliceCenter = Rect.new(24, 24, 276, 276)
+DiscordGlow.ZIndex = 10
+DiscordGlow.Parent = DiscordButton
 
-local ButtonIcon = Instance.new("TextLabel")
-ButtonIcon.Size = UDim2.new(0, 40, 0, 40)
-ButtonIcon.Position = UDim2.new(0, 20, 0.5, 0)
-ButtonIcon.AnchorPoint = Vector2.new(0, 0.5)
-ButtonIcon.BackgroundTransparency = 1
-ButtonIcon.Text = "💬"
-ButtonIcon.TextSize = 32
-ButtonIcon.TextTransparency = 1
-ButtonIcon.Parent = DiscordButton
+local DiscordTitle = Instance.new("TextLabel")
+DiscordTitle.Name = "Title"
+DiscordTitle.Size = UDim2.new(1, 0, 0, 18)
+DiscordTitle.Position = UDim2.new(0, 0, 0, 8)
+DiscordTitle.BackgroundTransparency = 1
+DiscordTitle.Text = "Copy Discord Link"
+DiscordTitle.TextColor3 = Colors.Text
+DiscordTitle.TextTransparency = 1
+DiscordTitle.Font = Enum.Font.GothamBold
+DiscordTitle.TextSize = 13
+DiscordTitle.ZIndex = 12
+DiscordTitle.Parent = DiscordButton
 
-local ButtonText = Instance.new("TextLabel")
-ButtonText.Size = UDim2.new(1, -80, 1, 0)
-ButtonText.Position = UDim2.new(0, 65, 0, 0)
-ButtonText.BackgroundTransparency = 1
-ButtonText.Text = "COPY DISCORD LINK"
-ButtonText.TextColor3 = Colors.White
-ButtonText.TextTransparency = 1
-ButtonText.Font = Enum.Font.GothamBlack
-ButtonText.TextSize = 20
-ButtonText.TextXAlignment = Enum.TextXAlignment.Left
-ButtonText.Parent = DiscordButton
+local DiscordSubtitle = Instance.new("TextLabel")
+DiscordSubtitle.Name = "Subtitle"
+DiscordSubtitle.Size = UDim2.new(1, 0, 0, 14)
+DiscordSubtitle.Position = UDim2.new(0, 0, 0, 26)
+DiscordSubtitle.BackgroundTransparency = 1
+DiscordSubtitle.Text = "Get key & support"
+DiscordSubtitle.TextColor3 = Color3.fromRGB(160, 170, 230)
+DiscordSubtitle.TextTransparency = 1
+DiscordSubtitle.Font = Enum.Font.Gotham
+DiscordSubtitle.TextSize = 10
+DiscordSubtitle.ZIndex = 12
+DiscordSubtitle.Parent = DiscordButton
 
-local ButtonSubtext = Instance.new("TextLabel")
-ButtonSubtext.Size = UDim2.new(1, -80, 0, 20)
-ButtonSubtext.Position = UDim2.new(0, 65, 1, -22)
-ButtonSubtext.BackgroundTransparency = 1
-ButtonSubtext.Text = "discord.gg/ZH48pK5wen"
-ButtonSubtext.TextColor3 = Color3.fromRGB(180, 190, 255)
-ButtonSubtext.TextTransparency = 1
-ButtonSubtext.Font = Enum.Font.Gotham
-ButtonSubtext.TextSize = 12
-ButtonSubtext.TextXAlignment = Enum.TextXAlignment.Left
-ButtonSubtext.Parent = DiscordButton
+-- GET SCRIPT Button
+local ScriptButton = Instance.new("TextButton")
+ScriptButton.Name = "ScriptButton"
+ScriptButton.Size = UDim2.new(0.5, -6, 0, 45)
+ScriptButton.Position = UDim2.new(0.5, 6, 0, 0)
+ScriptButton.BackgroundColor3 = Colors.Script
+ScriptButton.BackgroundTransparency = 1
+ScriptButton.Text = ""
+ScriptButton.AutoButtonColor = false
+ScriptButton.ZIndex = 11
+ScriptButton.Parent = ActionContainer
+CreateCorner(ScriptButton, 10)
+
+local ScriptStroke = CreateStroke(ScriptButton, Colors.Script, 1, 1)
+
+local ScriptGlow = Instance.new("ImageLabel")
+ScriptGlow.Name = "Glow"
+ScriptGlow.Size = UDim2.new(1, 20, 1, 20)
+ScriptGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
+ScriptGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+ScriptGlow.BackgroundTransparency = 1
+ScriptGlow.Image = "rbxassetid://5028857084"
+ScriptGlow.ImageColor3 = Colors.Script
+ScriptGlow.ImageTransparency = 1
+ScriptGlow.ScaleType = Enum.ScaleType.Slice
+ScriptGlow.SliceCenter = Rect.new(24, 24, 276, 276)
+ScriptGlow.ZIndex = 10
+ScriptGlow.Parent = ScriptButton
+
+local ScriptTitle = Instance.new("TextLabel")
+ScriptTitle.Name = "Title"
+ScriptTitle.Size = UDim2.new(1, 0, 0, 18)
+ScriptTitle.Position = UDim2.new(0, 0, 0, 8)
+ScriptTitle.BackgroundTransparency = 1
+ScriptTitle.Text = "GET SCRIPT"
+ScriptTitle.TextColor3 = Colors.Text
+ScriptTitle.TextTransparency = 1
+ScriptTitle.Font = Enum.Font.GothamBlack
+ScriptTitle.TextSize = 14
+ScriptTitle.ZIndex = 12
+ScriptTitle.Parent = ScriptButton
+
+local ScriptSubtitle = Instance.new("TextLabel")
+ScriptSubtitle.Name = "Subtitle"
+ScriptSubtitle.Size = UDim2.new(1, 0, 0, 14)
+ScriptSubtitle.Position = UDim2.new(0, 0, 0, 26)
+ScriptSubtitle.BackgroundTransparency = 1
+ScriptSubtitle.Text = "rscripts.net"
+ScriptSubtitle.TextColor3 = Color3.fromRGB(150, 220, 180)
+ScriptSubtitle.TextTransparency = 1
+ScriptSubtitle.Font = Enum.Font.Gotham
+ScriptSubtitle.TextSize = 10
+ScriptSubtitle.ZIndex = 12
+ScriptSubtitle.Parent = ScriptButton
+
+-- Close/Continue Button
+local ContinueButton = Instance.new("TextButton")
+ContinueButton.Name = "ContinueButton"
+ContinueButton.Size = UDim2.new(1, 0, 0, 40)
+ContinueButton.Position = UDim2.new(0, 0, 0, 55)
+ContinueButton.BackgroundColor3 = Colors.SurfaceLight
+ContinueButton.BackgroundTransparency = 1
+ContinueButton.Text = ""
+ContinueButton.AutoButtonColor = false
+ContinueButton.ZIndex = 11
+ContinueButton.Parent = ActionContainer
+CreateCorner(ContinueButton, 10)
+
+local ContinueStroke = CreateStroke(ContinueButton, Colors.Border, 1, 1)
+
+local ContinueText = Instance.new("TextLabel")
+ContinueText.Name = "Text"
+ContinueText.Size = UDim2.new(1, 0, 1, 0)
+ContinueText.BackgroundTransparency = 1
+ContinueText.Text = "Close"
+ContinueText.TextColor3 = Colors.TextSecondary
+ContinueText.TextTransparency = 1
+ContinueText.Font = Enum.Font.GothamBold
+ContinueText.TextSize = 13
+ContinueText.ZIndex = 12
+ContinueText.Parent = ContinueButton
 
 -- ═══════════════════════════════════════════════════════════════
--- ❌ CLOSE BUTTON
--- ═══════════════════════════════════════════════════════════════
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 50, 0, 50)
-CloseButton.Position = UDim2.new(1, -70, 0, 20)
-CloseButton.BackgroundColor3 = Colors.Primary
-CloseButton.BackgroundTransparency = 1
-CloseButton.Text = "✕"
-CloseButton.TextColor3 = Colors.White
-CloseButton.TextTransparency = 1
-CloseButton.Font = Enum.Font.GothamBlack
-CloseButton.TextSize = 24
-CloseButton.Parent = ContentContainer
-Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 10)
-
-local CloseStroke = Instance.new("UIStroke")
-CloseStroke.Color = Colors.Accent
-CloseStroke.Thickness = 2
-CloseStroke.Transparency = 1
-CloseStroke.Parent = CloseButton
-
--- ═══════════════════════════════════════════════════════════════
--- 🎬 FOOTER
+-- 👣 FOOTER
 -- ═══════════════════════════════════════════════════════════════
 
 local Footer = Instance.new("TextLabel")
-Footer.Size = UDim2.new(1, 0, 0, 30)
-Footer.Position = UDim2.new(0, 0, 1, -40)
+Footer.Name = "Footer"
+Footer.Size = UDim2.new(1, 0, 0, 16)
+Footer.Position = UDim2.new(0, 0, 1, -20)
 Footer.BackgroundTransparency = 1
-Footer.Text = "Made with ❤️ by KIRA • @heaven_nor_hell_"
-Footer.TextColor3 = Colors.White
+Footer.Text = "Made by KIRA  •  @heaven_nor_hell_"
+Footer.TextColor3 = Colors.TextDim
 Footer.TextTransparency = 1
-Footer.Font = Enum.Font.GothamMedium
-Footer.TextSize = 14
-Footer.Parent = ContentContainer
+Footer.Font = Enum.Font.Gotham
+Footer.TextSize = 10
+Footer.ZIndex = 11
+Footer.Parent = MainCard
 
 -- ═══════════════════════════════════════════════════════════════
--- 🎬 ANIMATION SEQUENCES
+-- 🎬 CINEMATIC ANIMATION SYSTEM
 -- ═══════════════════════════════════════════════════════════════
 
-local function TypeText(label, text, speed)
-    label.Text = ""
-    for i = 1, #text do
-        label.Text = text:sub(1, i)
-        task.wait(speed or 0.03)
-    end
+local function SmoothTween(obj, duration, props, style, direction)
+    return TweenService:Create(obj, TweenInfo.new(duration, style or Enum.EasingStyle.Quint, direction or Enum.EasingDirection.Out), props)
 end
 
-local function ShakeElement(element, intensity, duration)
-    local originalPos = element.Position
-    local startTime = tick()
-    
-    while tick() - startTime < duration do
-        local offsetX = math.random(-intensity, intensity)
-        local offsetY = math.random(-intensity, intensity)
-        element.Position = UDim2.new(
-            originalPos.X.Scale, originalPos.X.Offset + offsetX,
-            originalPos.Y.Scale, originalPos.Y.Offset + offsetY
-        )
-        task.wait(0.02)
-    end
-    
-    element.Position = originalPos
-end
-
-local function PulseElement(element, property, minVal, maxVal, duration)
+local function ParallaxBackground()
     task.spawn(function()
-        while element and element.Parent do
-            TweenService:Create(element, TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                [property] = maxVal
-            }):Play()
+        local angle = 0
+        while BackgroundImage and BackgroundImage.Parent do
+            angle = angle + 0.002
+            local xOffset = math.sin(angle) * 0.03
+            local yOffset = math.cos(angle * 0.7) * 0.02
+            BackgroundImage.Position = UDim2.new(0.5 + xOffset, 0, 0.5 + yOffset, 0)
+            task.wait()
+        end
+    end)
+end
+
+local function PulseGlow(glow, minTrans, maxTrans, duration)
+    task.spawn(function()
+        while glow and glow.Parent do
+            SmoothTween(glow, duration, {ImageTransparency = minTrans}, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut):Play()
             task.wait(duration)
-            TweenService:Create(element, TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                [property] = minVal
-            }):Play()
+            SmoothTween(glow, duration, {ImageTransparency = maxTrans}, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut):Play()
             task.wait(duration)
         end
     end)
 end
 
-local function FloatElement(element, amplitude, duration)
+local function ColorShift(obj, prop, color1, color2, duration)
+    task.spawn(function()
+        while obj and obj.Parent do
+            SmoothTween(obj, duration, {[prop] = color2}, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut):Play()
+            task.wait(duration)
+            SmoothTween(obj, duration, {[prop] = color1}, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut):Play()
+            task.wait(duration)
+        end
+    end)
+end
+
+local function SubtleHover(element, offsetY)
     local originalY = element.Position.Y.Offset
     task.spawn(function()
         while element and element.Parent do
-            TweenService:Create(element, TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Position = UDim2.new(element.Position.X.Scale, element.Position.X.Offset, element.Position.Y.Scale, originalY - amplitude)
-            }):Play()
-            task.wait(duration)
-            TweenService:Create(element, TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Position = UDim2.new(element.Position.X.Scale, element.Position.X.Offset, element.Position.Y.Scale, originalY + amplitude)
-            }):Play()
-            task.wait(duration)
-        end
-    end)
-end
-
-local function ColorCycle(element, property, colors, duration)
-    task.spawn(function()
-        local index = 1
-        while element and element.Parent do
-            local nextIndex = index % #colors + 1
-            TweenService:Create(element, TweenInfo.new(duration, Enum.EasingStyle.Sine), {
-                [property] = colors[nextIndex]
-            }):Play()
-            task.wait(duration)
-            index = nextIndex
-        end
-    end)
-end
-
-local function RotateSlow(element, duration)
-    task.spawn(function()
-        while element and element.Parent do
-            TweenService:Create(element, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
-                Rotation = element.Rotation + 360
-            }):Play()
-            task.wait(duration)
+            SmoothTween(element, 2, {Position = UDim2.new(element.Position.X.Scale, element.Position.X.Offset, element.Position.Y.Scale, originalY - offsetY)}, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut):Play()
+            task.wait(2)
+            SmoothTween(element, 2, {Position = UDim2.new(element.Position.X.Scale, element.Position.X.Offset, element.Position.Y.Scale, originalY + offsetY)}, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut):Play()
+            task.wait(2)
         end
     end)
 end
 
 -- ═══════════════════════════════════════════════════════════════
--- 🚀 MAIN ANIMATION SEQUENCE
+-- 🚀 MAIN ENTRANCE SEQUENCE
 -- ═══════════════════════════════════════════════════════════════
 
 task.spawn(function()
-    -- Phase 1: Blur and Background
-    TweenService:Create(BlurEffect, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {Size = 30}):Play()
-    TweenService:Create(BackgroundFrame, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+    -- Phase 1: Cinematic Setup
+    SmoothTween(BlurEffect, 1.2, {Size = 20}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ColorCorrection, 1, {Brightness = -0.05, Contrast = 0.1, Saturation = -0.1}, Enum.EasingStyle.Quint):Play()
+    
+    -- Cinematic bars slide in
+    SmoothTween(CinematicTop, 0.8, {Position = UDim2.new(0, 0, 0, 0)}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(CinematicBottom, 0.8, {Position = UDim2.new(0, 0, 0.92, 0)}, Enum.EasingStyle.Quint):Play()
     task.wait(0.3)
     
-    TweenService:Create(BackgroundImage, TweenInfo.new(1, Enum.EasingStyle.Quint), {ImageTransparency = 0.15}):Play()
-    task.wait(0.3)
+    -- Background fade
+    SmoothTween(BackgroundImage, 1.5, {ImageTransparency = 0.4}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DarkOverlay, 1, {BackgroundTransparency = 0.35}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(Vignette, 1.2, {ImageTransparency = 0.35}, Enum.EasingStyle.Quint):Play()
     
-    TweenService:Create(DarkOverlay, TweenInfo.new(0.8), {BackgroundTransparency = 0.4}):Play()
-    TweenService:Create(Vignette, TweenInfo.new(1), {ImageTransparency = 0.3}):Play()
-    task.wait(0.5)
+    ParallaxBackground()
     
-    -- Start background animation (slow zoom/pan)
-    task.spawn(function()
-        while BackgroundImage and BackgroundImage.Parent do
-            TweenService:Create(BackgroundImage, TweenInfo.new(10, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Position = UDim2.new(-0.05, 0, -0.15, 0)
-            }):Play()
-            task.wait(10)
-            TweenService:Create(BackgroundImage, TweenInfo.new(10, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Position = UDim2.new(-0.15, 0, -0.05, 0)
-            }):Play()
-            task.wait(10)
-        end
-    end)
-    
-    -- Start particles
+    -- Start particle system
     task.spawn(function()
         while ParticleContainer and ParticleContainer.Parent do
-            CreateParticle()
-            task.wait(math.random(100, 300) / 1000)
+            CreateFloatingParticle()
+            task.wait(math.random(200, 500) / 1000)
         end
     end)
     
-    -- Phase 2: Logo entrance with bounce
-    task.wait(0.3)
-    LogoContainer.BackgroundTransparency = 0.3
-    TweenService:Create(LogoContainer, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Size = UDim2.new(0, 140, 0, 140)
-    }):Play()
-    TweenService:Create(LogoStroke, TweenInfo.new(0.5), {Transparency = 0}):Play()
-    TweenService:Create(LogoImage, TweenInfo.new(0.6), {ImageTransparency = 0}):Play()
-    TweenService:Create(LogoGlow, TweenInfo.new(0.8), {ImageTransparency = 0.4}):Play()
-    
-    -- Start logo animations
-    FloatElement(LogoContainer, 8, 1.5)
-    ColorCycle(LogoStroke, "Color", {Colors.Accent, Colors.Primary, Colors.Gold}, 1.2)
-    PulseElement(LogoGlow, "ImageTransparency", 0.3, 0.7, 1)
-    
-    -- Phase 3: Fire emojis
-    task.wait(0.4)
-    TweenService:Create(LeftFire, TweenInfo.new(0.5, Enum.EasingStyle.Back), {TextTransparency = 0}):Play()
-    TweenService:Create(RightFire, TweenInfo.new(0.5, Enum.EasingStyle.Back), {TextTransparency = 0}):Play()
-    
-    -- Animate fire emojis
-    FloatElement(LeftFire, 10, 0.8)
-    FloatElement(RightFire, 10, 0.9)
-    
+    -- Start light beams
     task.spawn(function()
-        while LeftFire and LeftFire.Parent do
-            TweenService:Create(LeftFire, TweenInfo.new(0.3), {Rotation = -15}):Play()
-            TweenService:Create(RightFire, TweenInfo.new(0.3), {Rotation = 15}):Play()
-            task.wait(0.3)
-            TweenService:Create(LeftFire, TweenInfo.new(0.3), {Rotation = 15}):Play()
-            TweenService:Create(RightFire, TweenInfo.new(0.3), {Rotation = -15}):Play()
-            task.wait(0.3)
+        task.wait(1)
+        while LightBeamContainer and LightBeamContainer.Parent do
+            CreateLightBeam()
+            task.wait(math.random(3, 6))
         end
     end)
     
-    -- Phase 4: Title with slam effect
-    task.wait(0.3)
-    TitleLabel.Position = UDim2.new(0, 0, 0.25, 0)
-    TweenService:Create(TitleLabel, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
-        TextTransparency = 0,
-        Position = UDim2.new(0, 0, 0.35, 0)
-    }):Play()
-    TweenService:Create(TitleStroke, TweenInfo.new(0.3), {Transparency = 0}):Play()
+    task.wait(0.4)
+    
+    -- Phase 2: Card Entrance
+    MainCard.Position = UDim2.new(0.5, 0, 0.55, 0)
+    MainCard.BackgroundTransparency = 0.02
+    
+    SmoothTween(MainCard, 0.8, {Position = UDim2.new(0.5, 0, 0.5, 0)}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(MainCardStroke, 0.6, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(CardGlow, 1.2, {ImageTransparency = 0.85}, Enum.EasingStyle.Quint):Play()
+    
+    PulseGlow(CardGlow, 0.82, 0.92, 2.5)
+    task.wait(0.15)
+    
+    -- Accent line
+    SmoothTween(AccentLine, 0.6, {BackgroundTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.1)
+    
+    -- Phase 3: Header
+    LogoFrame.Size = UDim2.new(0, 45, 0, 45)
+    LogoFrame.BackgroundTransparency = 0.2
+    
+    SmoothTween(LogoFrame, 0.6, {Size = UDim2.new(0, 65, 0, 65)}, Enum.EasingStyle.Back):Play()
+    SmoothTween(LogoStroke, 0.4, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(LogoImage, 0.5, {ImageTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(LogoGlow, 0.8, {ImageTransparency = 0.6}, Enum.EasingStyle.Quint):Play()
+    
+    SubtleHover(LogoFrame, 2)
+    PulseGlow(LogoGlow, 0.5, 0.75, 1.8)
+    ColorShift(LogoStroke, "Color", Colors.Primary, Colors.Accent, 2)
     
     task.wait(0.1)
-    ShakeElement(TitleLabel, 3, 0.2)
     
-    -- Title glow animation
-    ColorCycle(TitleStroke, "Color", {Colors.Primary, Colors.Accent, Colors.Glow1}, 0.8)
+    SmoothTween(BrandTitle, 0.5, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.08)
+    SmoothTween(BrandSubtitle, 0.5, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.08)
     
-    -- Phase 5: Version badge
-    task.wait(0.2)
-    VersionBadge.BackgroundTransparency = 0.1
-    TweenService:Create(VersionBadge, TweenInfo.new(0.3, Enum.EasingStyle.Back), {
-        TextTransparency = 0,
-        Size = UDim2.new(0, 80, 0, 30)
-    }):Play()
+    VersionBadge.BackgroundTransparency = 0.15
+    SmoothTween(VersionText, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.06)
     
-    PulseElement(VersionBadge, "BackgroundTransparency", 0.1, 0.4, 0.8)
+    NewBadge.BackgroundTransparency = 0
+    SmoothTween(NewText, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
     
-    -- Phase 6: Announcement box
-    task.wait(0.3)
-    AnnouncementContainer.BackgroundTransparency = 0.5
-    TweenService:Create(AnnouncementContainer, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
-        BackgroundTransparency = 0.15
-    }):Play()
-    TweenService:Create(AnnouncementStroke, TweenInfo.new(0.4), {Transparency = 0}):Play()
-    TweenService:Create(AnnouncementGlow, TweenInfo.new(0.6), {ImageTransparency = 0.5}):Play()
-    TweenService:Create(AnnouncementIcon, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-    
-    -- Announcement box animations
-    ColorCycle(AnnouncementStroke, "Color", {Colors.Gold, Colors.Accent, Colors.White}, 1)
-    PulseElement(AnnouncementGlow, "ImageTransparency", 0.4, 0.8, 1.2)
-    
-    -- Phase 7: Type out announcement text
-    task.wait(0.3)
+    -- Pulse the NEW badge
     task.spawn(function()
-        TypeText(AnnouncementText, Config.ANNOUNCEMENT_TEXT, 0.04)
-        
-        -- Flash effect after typing
-        TweenService:Create(AnnouncementText, TweenInfo.new(0.1), {TextColor3 = Colors.White}):Play()
-        task.wait(0.1)
-        TweenService:Create(AnnouncementText, TweenInfo.new(0.3), {TextColor3 = Colors.Gold}):Play()
-        
-        -- Start text pulse
-        PulseElement(AnnouncementText, "TextSize", 22, 26, 1)
-    end)
-    
-    -- Subtext fade in
-    task.wait(1.5)
-    TweenService:Create(SubText, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
-    
-    -- Phase 8: Discord button entrance
-    task.wait(0.4)
-    DiscordButton.BackgroundTransparency = 0
-    ButtonContainer.Position = UDim2.new(0.5, 0, 0.85, 0)
-    
-    TweenService:Create(ButtonContainer, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Position = UDim2.new(0.5, 0, 0.72, 0)
-    }):Play()
-    TweenService:Create(ButtonStroke, TweenInfo.new(0.4), {Transparency = 0}):Play()
-    TweenService:Create(ButtonGlow, TweenInfo.new(0.5), {ImageTransparency = 0.5}):Play()
-    TweenService:Create(ButtonIcon, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-    TweenService:Create(ButtonText, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
-    TweenService:Create(ButtonSubtext, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
-    
-    -- Button animations
-    PulseElement(ButtonGlow, "ImageTransparency", 0.4, 0.8, 1)
-    ColorCycle(ButtonStroke, "Color", {Color3.fromRGB(130, 140, 255), Color3.fromRGB(180, 180, 255), Color3.fromRGB(100, 120, 255)}, 0.8)
-    
-    task.spawn(function()
-        while ButtonIcon and ButtonIcon.Parent do
-            TweenService:Create(ButtonIcon, TweenInfo.new(0.5, Enum.EasingStyle.Bounce), {Rotation = -10}):Play()
-            task.wait(0.5)
-            TweenService:Create(ButtonIcon, TweenInfo.new(0.5, Enum.EasingStyle.Bounce), {Rotation = 10}):Play()
-            task.wait(0.5)
+        while NewBadge and NewBadge.Parent do
+            SmoothTween(NewBadge, 0.8, {BackgroundTransparency = 0.3}, Enum.EasingStyle.Sine):Play()
+            task.wait(0.8)
+            SmoothTween(NewBadge, 0.8, {BackgroundTransparency = 0}, Enum.EasingStyle.Sine):Play()
+            task.wait(0.8)
         end
     end)
     
-    -- Phase 9: Close button
-    task.wait(0.3)
-    CloseButton.BackgroundTransparency = 0.2
-    TweenService:Create(CloseButton, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
-        TextTransparency = 0
-    }):Play()
-    TweenService:Create(CloseStroke, TweenInfo.new(0.3), {Transparency = 0}):Play()
+    -- Close button
+    CloseButton.BackgroundTransparency = 0.4
+    SmoothTween(CloseButton:FindFirstChildOfClass("UIStroke"), 0.4, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(CloseIcon, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.15)
     
-    -- Close button pulse
-    PulseElement(CloseButton, "BackgroundTransparency", 0.2, 0.5, 1)
+    -- Phase 4: Announcement Banner
+    AnnouncementBanner.BackgroundTransparency = 0.1
+    SmoothTween(BannerStroke, 0.5, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(BannerGlow, 0.8, {ImageTransparency = 0.75}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.05)
+    SmoothTween(BannerTitle, 0.5, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.08)
+    SmoothTween(BannerSubtitle, 0.5, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
     
-    -- Phase 10: Footer
-    task.wait(0.2)
-    TweenService:Create(Footer, TweenInfo.new(0.5), {TextTransparency = 0.3}):Play()
+    PulseGlow(BannerGlow, 0.65, 0.85, 2)
+    task.wait(0.15)
+    
+    -- Phase 5: Features
+    SmoothTween(FeaturesLabel, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.1)
+    
+    for i, feature in ipairs(FeatureElements) do
+        task.delay((i-1) * 0.1, function()
+            feature.card.BackgroundTransparency = 0.35
+            SmoothTween(feature.stroke, 0.4, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+            SmoothTween(feature.dot, 0.3, {BackgroundTransparency = 0}, Enum.EasingStyle.Quint):Play()
+            SmoothTween(feature.title, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+            SmoothTween(feature.desc, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+        end)
+    end
+    task.wait(0.5)
+    
+    -- Phase 6: Changelog
+    SmoothTween(ChangelogLabel, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    task.wait(0.08)
+    
+    ChangelogContainer.BackgroundTransparency = 0.4
+    SmoothTween(ChangelogContainer:FindFirstChildOfClass("UIStroke"), 0.4, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    
+    for i, change in ipairs(ChangelogElements) do
+        task.delay((i-1) * 0.08, function()
+            SmoothTween(change.bullet, 0.3, {BackgroundTransparency = 0}, Enum.EasingStyle.Quint):Play()
+            SmoothTween(change.text, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+        end)
+    end
+    task.wait(0.4)
+    
+    -- Phase 7: Action Buttons
+    DiscordButton.BackgroundTransparency = 0
+    SmoothTween(DiscordStroke, 0.4, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DiscordGlow, 0.6, {ImageTransparency = 0.75}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DiscordTitle, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DiscordSubtitle, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    
+    PulseGlow(DiscordGlow, 0.65, 0.85, 1.8)
+    
+    task.wait(0.1)
+    
+    ScriptButton.BackgroundTransparency = 0
+    SmoothTween(ScriptStroke, 0.4, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ScriptGlow, 0.6, {ImageTransparency = 0.75}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ScriptTitle, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ScriptSubtitle, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    
+    PulseGlow(ScriptGlow, 0.65, 0.85, 1.8)
+    
+    task.wait(0.1)
+    
+    ContinueButton.BackgroundTransparency = 0.4
+    SmoothTween(ContinueStroke, 0.4, {Transparency = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ContinueText, 0.4, {TextTransparency = 0}, Enum.EasingStyle.Quint):Play()
+    
+    -- Footer
+    task.wait(0.15)
+    SmoothTween(Footer, 0.5, {TextTransparency = 0.5}, Enum.EasingStyle.Quint):Play()
 end)
 
 -- ═══════════════════════════════════════════════════════════════
 -- 🖱️ BUTTON INTERACTIONS
 -- ═══════════════════════════════════════════════════════════════
 
-local buttonCopied = false
+local discordCopied = false
+local scriptCopied = false
 
+-- Discord Button
 DiscordButton.MouseEnter:Connect(function()
-    if buttonCopied then return end
-    TweenService:Create(DiscordButton, TweenInfo.new(0.2), {
-        BackgroundColor3 = Color3.fromRGB(100, 115, 255)
-    }):Play()
-    TweenService:Create(ButtonContainer, TweenInfo.new(0.2), {
-        Size = UDim2.new(0, 340, 0, 75)
-    }):Play()
-    TweenService:Create(ButtonGlow, TweenInfo.new(0.2), {
-        ImageTransparency = 0.3,
-        Size = UDim2.new(1, 70, 1, 70)
-    }):Play()
+    if discordCopied then return end
+    SmoothTween(DiscordButton, 0.25, {BackgroundColor3 = Colors.DiscordHover}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DiscordGlow, 0.25, {ImageTransparency = 0.55, Size = UDim2.new(1, 30, 1, 30)}, Enum.EasingStyle.Quint):Play()
 end)
 
 DiscordButton.MouseLeave:Connect(function()
-    if buttonCopied then return end
-    TweenService:Create(DiscordButton, TweenInfo.new(0.2), {
-        BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-    }):Play()
-    TweenService:Create(ButtonContainer, TweenInfo.new(0.2), {
-        Size = UDim2.new(0, 320, 0, 70)
-    }):Play()
-    TweenService:Create(ButtonGlow, TweenInfo.new(0.2), {
-        ImageTransparency = 0.5,
-        Size = UDim2.new(1, 50, 1, 50)
-    }):Play()
+    if discordCopied then return end
+    SmoothTween(DiscordButton, 0.25, {BackgroundColor3 = Colors.Discord}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DiscordGlow, 0.25, {ImageTransparency = 0.75, Size = UDim2.new(1, 20, 1, 20)}, Enum.EasingStyle.Quint):Play()
 end)
 
 DiscordButton.MouseButton1Click:Connect(function()
-    if buttonCopied then return end
-    buttonCopied = true
+    if discordCopied then return end
+    discordCopied = true
     
-    -- Copy to clipboard
     pcall(function() setclipboard(Config.DISCORD) end)
     
-    -- Success animation
-    TweenService:Create(DiscordButton, TweenInfo.new(0.3), {
-        BackgroundColor3 = Colors.Success
-    }):Play()
+    SmoothTween(DiscordButton, 0.3, {BackgroundColor3 = Colors.Success}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DiscordGlow, 0.3, {ImageColor3 = Colors.Success, ImageTransparency = 0.5}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DiscordStroke, 0.3, {Color = Colors.Success}, Enum.EasingStyle.Quint):Play()
     
-    -- Scale bounce
-    TweenService:Create(ButtonContainer, TweenInfo.new(0.15, Enum.EasingStyle.Back), {
-        Size = UDim2.new(0, 350, 0, 80)
-    }):Play()
+    -- Scale pulse
+    SmoothTween(DiscordButton, 0.15, {Size = UDim2.new(0.5, -2, 0, 50)}, Enum.EasingStyle.Back):Play()
     task.wait(0.15)
-    TweenService:Create(ButtonContainer, TweenInfo.new(0.3, Enum.EasingStyle.Elastic), {
-        Size = UDim2.new(0, 320, 0, 70)
-    }):Play()
+    SmoothTween(DiscordButton, 0.3, {Size = UDim2.new(0.5, -6, 0, 45)}, Enum.EasingStyle.Quint):Play()
     
-    -- Change text with animation
-    ButtonText.Text = ""
-    ButtonIcon.Text = "✅"
-    ButtonSubtext.Text = ""
+    DiscordTitle.Text = "Link Copied!"
+    DiscordSubtitle.Text = "discord.gg/ZH48pK5wen"
     
-    task.spawn(function()
-        TypeText(ButtonText, "LINK COPIED!", 0.05)
-    end)
-    
-    TweenService:Create(ButtonGlow, TweenInfo.new(0.3), {
-        ImageColor3 = Colors.Success,
-        ImageTransparency = 0.2
-    }):Play()
-    TweenService:Create(ButtonStroke, TweenInfo.new(0.3), {
-        Color = Colors.Success
-    }):Play()
-    
-    -- Confetti-like effect
-    for i = 1, 8 do
-        local confetti = Instance.new("Frame")
-        confetti.Size = UDim2.new(0, math.random(8, 15), 0, math.random(8, 15))
-        confetti.Position = UDim2.new(0.5, 0, 0.5, 0)
-        confetti.AnchorPoint = Vector2.new(0.5, 0.5)
-        confetti.BackgroundColor3 = Color3.fromHSV(math.random(0, 100)/100, 0.8, 1)
-        confetti.BorderSizePixel = 0
-        confetti.Parent = ButtonContainer
-        Instance.new("UICorner", confetti).CornerRadius = UDim.new(1, 0)
-        
-        local angle = (i / 8) * math.pi * 2
-        local distance = math.random(80, 150)
-        local endX = math.cos(angle) * distance
-        local endY = math.sin(angle) * distance
-        
-        TweenService:Create(confetti, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {
-            Position = UDim2.new(0.5, endX, 0.5, endY),
-            BackgroundTransparency = 1,
-            Rotation = math.random(-360, 360)
-        }):Play()
-        
-        task.delay(0.8, function()
-            confetti:Destroy()
-        end)
-    end
-    
-    -- Notify
     pcall(function()
         StarterGui:SetCore("SendNotification", {
-            Title = "✅ Copied!",
-            Text = "Discord link copied to clipboard!",
+            Title = "Copied",
+            Text = "Discord link copied to clipboard",
             Duration = 3
         })
     end)
     
-    -- Reset after delay
     task.delay(3, function()
-        buttonCopied = false
-        ButtonIcon.Text = "💬"
-        ButtonText.Text = "COPY DISCORD LINK"
-        ButtonSubtext.Text = "discord.gg/ZH48pK5wen"
-        
-        TweenService:Create(DiscordButton, TweenInfo.new(0.5), {
-            BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-        }):Play()
-        TweenService:Create(ButtonGlow, TweenInfo.new(0.5), {
-            ImageColor3 = Color3.fromRGB(88, 101, 242),
-            ImageTransparency = 0.5
-        }):Play()
-        TweenService:Create(ButtonStroke, TweenInfo.new(0.5), {
-            Color = Color3.fromRGB(130, 140, 255)
-        }):Play()
+        discordCopied = false
+        SmoothTween(DiscordButton, 0.4, {BackgroundColor3 = Colors.Discord}, Enum.EasingStyle.Quint):Play()
+        SmoothTween(DiscordGlow, 0.4, {ImageColor3 = Colors.Discord, ImageTransparency = 0.75}, Enum.EasingStyle.Quint):Play()
+        SmoothTween(DiscordStroke, 0.4, {Color = Colors.Discord}, Enum.EasingStyle.Quint):Play()
+        DiscordTitle.Text = "Copy Discord Link"
+        DiscordSubtitle.Text = "Get key & support"
     end)
 end)
 
--- Close button interactions
+-- Script Button
+ScriptButton.MouseEnter:Connect(function()
+    if scriptCopied then return end
+    SmoothTween(ScriptButton, 0.25, {BackgroundColor3 = Colors.ScriptHover}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ScriptGlow, 0.25, {ImageTransparency = 0.55, Size = UDim2.new(1, 30, 1, 30)}, Enum.EasingStyle.Quint):Play()
+end)
+
+ScriptButton.MouseLeave:Connect(function()
+    if scriptCopied then return end
+    SmoothTween(ScriptButton, 0.25, {BackgroundColor3 = Colors.Script}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ScriptGlow, 0.25, {ImageTransparency = 0.75, Size = UDim2.new(1, 20, 1, 20)}, Enum.EasingStyle.Quint):Play()
+end)
+
+ScriptButton.MouseButton1Click:Connect(function()
+    if scriptCopied then return end
+    scriptCopied = true
+    
+    pcall(function() setclipboard(Config.SCRIPT_LINK) end)
+    
+    SmoothTween(ScriptButton, 0.3, {BackgroundColor3 = Colors.Success}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ScriptGlow, 0.3, {ImageColor3 = Colors.Success, ImageTransparency = 0.5}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ScriptStroke, 0.3, {Color = Colors.Success}, Enum.EasingStyle.Quint):Play()
+    
+    SmoothTween(ScriptButton, 0.15, {Size = UDim2.new(0.5, -2, 0, 50)}, Enum.EasingStyle.Back):Play()
+    task.wait(0.15)
+    SmoothTween(ScriptButton, 0.3, {Size = UDim2.new(0.5, -6, 0, 45)}, Enum.EasingStyle.Quint):Play()
+    
+    ScriptTitle.Text = "Link Copied!"
+    ScriptSubtitle.Text = "Open in browser"
+    
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = "Copied",
+            Text = "Script link copied to clipboard",
+            Duration = 3
+        })
+    end)
+    
+    task.delay(3, function()
+        scriptCopied = false
+        SmoothTween(ScriptButton, 0.4, {BackgroundColor3 = Colors.Script}, Enum.EasingStyle.Quint):Play()
+        SmoothTween(ScriptGlow, 0.4, {ImageColor3 = Colors.Script, ImageTransparency = 0.75}, Enum.EasingStyle.Quint):Play()
+        SmoothTween(ScriptStroke, 0.4, {Color = Colors.Script}, Enum.EasingStyle.Quint):Play()
+        ScriptTitle.Text = "GET SCRIPT"
+        ScriptSubtitle.Text = "rscripts.net"
+    end)
+end)
+
+-- Continue Button
+ContinueButton.MouseEnter:Connect(function()
+    SmoothTween(ContinueButton, 0.25, {BackgroundColor3 = Colors.Primary, BackgroundTransparency = 0.15}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ContinueText, 0.25, {TextColor3 = Colors.Text}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ContinueStroke, 0.25, {Color = Colors.Primary}, Enum.EasingStyle.Quint):Play()
+end)
+
+ContinueButton.MouseLeave:Connect(function()
+    SmoothTween(ContinueButton, 0.25, {BackgroundColor3 = Colors.SurfaceLight, BackgroundTransparency = 0.4}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ContinueText, 0.25, {TextColor3 = Colors.TextSecondary}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ContinueStroke, 0.25, {Color = Colors.Border}, Enum.EasingStyle.Quint):Play()
+end)
+
+-- Close Button
 CloseButton.MouseEnter:Connect(function()
-    TweenService:Create(CloseButton, TweenInfo.new(0.2), {
-        BackgroundColor3 = Color3.fromRGB(200, 50, 50),
-        BackgroundTransparency = 0
-    }):Play()
-    TweenService:Create(CloseButton, TweenInfo.new(0.2), {
-        Size = UDim2.new(0, 55, 0, 55)
-    }):Play()
+    SmoothTween(CloseButton, 0.2, {BackgroundColor3 = Color3.fromRGB(180, 50, 50), BackgroundTransparency = 0.15}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(CloseIcon, 0.2, {TextColor3 = Colors.Text}, Enum.EasingStyle.Quint):Play()
 end)
 
 CloseButton.MouseLeave:Connect(function()
-    TweenService:Create(CloseButton, TweenInfo.new(0.2), {
-        BackgroundColor3 = Colors.Primary,
-        BackgroundTransparency = 0.2
-    }):Play()
-    TweenService:Create(CloseButton, TweenInfo.new(0.2), {
-        Size = UDim2.new(0, 50, 0, 50)
-    }):Play()
+    SmoothTween(CloseButton, 0.2, {BackgroundColor3 = Colors.SurfaceLight, BackgroundTransparency = 0.4}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(CloseIcon, 0.2, {TextColor3 = Colors.TextMuted}, Enum.EasingStyle.Quint):Play()
 end)
 
-CloseButton.MouseButton1Click:Connect(function()
-    -- Close animation
-    TweenService:Create(CloseButton, TweenInfo.new(0.1), {
-        Rotation = 90
-    }):Play()
+-- Close Function
+local function CloseAnnouncement()
+    -- Cinematic exit
+    SmoothTween(MainCard, 0.6, {Position = UDim2.new(0.5, 0, 0.55, 0), BackgroundTransparency = 1}, Enum.EasingStyle.Quint, Enum.EasingDirection.In):Play()
+    SmoothTween(MainCardStroke, 0.4, {Transparency = 1}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(CardGlow, 0.4, {ImageTransparency = 1}, Enum.EasingStyle.Quint):Play()
     
-    task.wait(0.1)
-    
-    -- Fade everything out
-    TweenService:Create(ContentContainer, TweenInfo.new(0.3), {
-        Position = UDim2.new(0, 0, 0.05, 0)
-    }):Play()
-    
-    for _, child in pairs(ContentContainer:GetDescendants()) do
-        if child:IsA("TextLabel") or child:IsA("TextButton") then
-            TweenService:Create(child, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+    -- Fade all elements
+    for _, desc in pairs(MainCard:GetDescendants()) do
+        if desc:IsA("TextLabel") then
+            SmoothTween(desc, 0.3, {TextTransparency = 1}, Enum.EasingStyle.Quint):Play()
         end
-        if child:IsA("Frame") and child.BackgroundTransparency < 1 then
-            TweenService:Create(child, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+        if desc:IsA("TextButton") then
+            SmoothTween(desc, 0.3, {BackgroundTransparency = 1}, Enum.EasingStyle.Quint):Play()
         end
-        if child:IsA("ImageLabel") then
-            TweenService:Create(child, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
+        if desc:IsA("Frame") and desc.BackgroundTransparency < 1 then
+            SmoothTween(desc, 0.3, {BackgroundTransparency = 1}, Enum.EasingStyle.Quint):Play()
         end
-        if child:IsA("UIStroke") then
-            TweenService:Create(child, TweenInfo.new(0.3), {Transparency = 1}):Play()
+        if desc:IsA("ImageLabel") then
+            SmoothTween(desc, 0.3, {ImageTransparency = 1}, Enum.EasingStyle.Quint):Play()
+        end
+        if desc:IsA("UIStroke") then
+            SmoothTween(desc, 0.3, {Transparency = 1}, Enum.EasingStyle.Quint):Play()
         end
     end
     
-    task.wait(0.2)
+    task.wait(0.25)
     
-    TweenService:Create(BackgroundImage, TweenInfo.new(0.4), {ImageTransparency = 1}):Play()
-    TweenService:Create(DarkOverlay, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
-    TweenService:Create(Vignette, TweenInfo.new(0.4), {ImageTransparency = 1}):Play()
-    TweenService:Create(BlurEffect, TweenInfo.new(0.5), {Size = 0}):Play()
+    SmoothTween(CinematicTop, 0.6, {Position = UDim2.new(0, 0, -0.08, 0)}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(CinematicBottom, 0.6, {Position = UDim2.new(0, 0, 1, 0)}, Enum.EasingStyle.Quint):Play()
     
-    task.wait(0.5)
+    SmoothTween(BackgroundImage, 0.6, {ImageTransparency = 1}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(DarkOverlay, 0.5, {BackgroundTransparency = 1}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(Vignette, 0.5, {ImageTransparency = 1}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(BlurEffect, 0.6, {Size = 0}, Enum.EasingStyle.Quint):Play()
+    SmoothTween(ColorCorrection, 0.5, {Brightness = 0, Contrast = 0, Saturation = 0}, Enum.EasingStyle.Quint):Play()
+    
+    task.wait(0.6)
     
     BlurEffect:Destroy()
+    ColorCorrection:Destroy()
     ScreenGui:Destroy()
-end)
+end
 
--- ═══════════════════════════════════════════════════════════════
--- ⌨️ KEYBOARD SHORTCUT
--- ═══════════════════════════════════════════════════════════════
+ContinueButton.MouseButton1Click:Connect(CloseAnnouncement)
+CloseButton.MouseButton1Click:Connect(CloseAnnouncement)
 
+-- Keyboard
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
-    if input.KeyCode == Enum.KeyCode.Escape then
-        CloseButton.MouseButton1Click:Fire()
+    if input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.Return then
+        CloseAnnouncement()
     end
 end)
 
-print("🔥 KIRA Announcement Screen Loaded!")
+print("KIRA HUB Cinematic Announcement v3.6.5 Loaded")
